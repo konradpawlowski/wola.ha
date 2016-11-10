@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{048E15D6-7241-4F51-92EF-058C6DF18BB3}</ProjectGuid>
+    <ProjectGuid>{5D9FB206-D53D-4C66-8B38-9C99723957F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>wola.ha.common</RootNamespace>
-    <AssemblyName>wola.ha.common</AssemblyName>
+    <RootNamespace>wola.ha.db</RootNamespace>
+    <AssemblyName>wola.ha.db</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -107,17 +107,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Devices\MCP23017.cs" />
-    <Compile Include="Enums\I2COperation.cs" />
-    <Compile Include="Enums\TempSensorEnum.cs" />
-    <Compile Include="Enums\ArduinoI2CResponse.cs" />
-    <Compile Include="I2C\I2CAddressException.cs" />
-    <Compile Include="I2C\I2CDeviceNotFoundException.cs" />
-    <Compile Include="I2C\I2cHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\wola.ha.common.rd.xml" />
+    <EmbeddedResource Include="Properties\wola.ha.db.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.15.1">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

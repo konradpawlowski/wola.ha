@@ -96,8 +96,8 @@ void recivedDataManager(TI2CMessageFrame message) {
 		Serial.println(Response2);
 		break;
 
-	default:
-		break;
+	case Write:
+
 	}
 
 }

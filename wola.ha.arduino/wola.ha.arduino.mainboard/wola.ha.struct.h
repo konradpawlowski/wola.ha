@@ -11,7 +11,9 @@ typedef struct I2CMessageFrame
 	int Operation;
 	int TempSensor;
 	int Pin;
+	bool value;
 	byte SensorAddress[8];
+
 
 
 
