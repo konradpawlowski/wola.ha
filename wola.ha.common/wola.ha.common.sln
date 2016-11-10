@@ -5,6 +5,16 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.common", "wola.ha.common\wola.ha.common.csproj", "{048E15D6-7241-4F51-92EF-058C6DF18BB3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8A28D9F9-25CF-4FC7-A16A-14F9E2458640}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataBase", "DataBase", "{C08E8E98-5DAD-4495-9A3F-423AD742DDCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controller", "Controller", "{0CD692D4-6F75-4F97-835D-544A5FDD2FA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{202355E4-9B63-4CEB-A3D2-435C440C79DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduino.mainboard", "..\wola.ha.arduino\wola.ha.arduino.mainboard\wola.ha.arduino.mainboard.vcxproj", "{81F2DB74-DE83-4F0A-8321-A62711FB56D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +43,22 @@ Global
 		{048E15D6-7241-4F51-92EF-058C6DF18BB3}.Release|x64.Build.0 = Release|x64
 		{048E15D6-7241-4F51-92EF-058C6DF18BB3}.Release|x86.ActiveCfg = Release|x86
 		{048E15D6-7241-4F51-92EF-058C6DF18BB3}.Release|x86.Build.0 = Release|x86
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Debug|ARM.ActiveCfg = Debug|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Debug|x64.ActiveCfg = Debug|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Debug|x86.ActiveCfg = Debug|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Debug|x86.Build.0 = Debug|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Release|Any CPU.ActiveCfg = Release|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Release|ARM.ActiveCfg = Release|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Release|x64.ActiveCfg = Release|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Release|x86.ActiveCfg = Release|Win32
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{048E15D6-7241-4F51-92EF-058C6DF18BB3} = {8A28D9F9-25CF-4FC7-A16A-14F9E2458640}
+		{81F2DB74-DE83-4F0A-8321-A62711FB56D5} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
 	EndGlobalSection
 EndGlobal
