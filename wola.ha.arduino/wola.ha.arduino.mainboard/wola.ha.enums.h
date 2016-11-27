@@ -1,9 +1,11 @@
 #pragma once
 typedef enum I2COperation
 {
+
 	Temp,
 	Read,
-	Write
+	Write,
+	Reset
 } TOperation;
 
 
@@ -13,4 +15,9 @@ enum TempSensorEnum
 	Ds18B20
 
 };
-
+enum I2CResponseStatus {
+	BRAK,
+	OK,
+	ERROR,
+	WARRNING
+};

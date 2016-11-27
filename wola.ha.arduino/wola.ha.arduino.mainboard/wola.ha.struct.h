@@ -1,21 +1,18 @@
 #pragma once
-typedef struct MyStruct
+
+typedef struct I2CResponse
 {
 	float Temperature;
 	float Humidity;
-
-} TMyStruct;
+	int Value;
+	int Status;
+} t_i2cResponse;
 
 typedef struct I2CMessageFrame
 {
 	int Operation;
 	int TempSensor;
 	int Pin;
-	bool value;
 	byte SensorAddress[8];
-
-
-
-
-
-} TI2CMessageFrame;
+	bool Value;
+} t_i2cMessageFrame;

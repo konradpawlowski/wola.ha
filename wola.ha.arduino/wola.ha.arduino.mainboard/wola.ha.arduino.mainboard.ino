@@ -1,109 +1,167 @@
-/*
-Name:		IotSensor.ino
-Created:	10/19/2016 10:33:10 PM
-Author:	konrad
-*/
-
-
-#include <DHT.h>
+Ôªø#include <DHT.h>
 #include "DallasTemperature.h"
 #include <Wire.h>
 #include <OneWire.h>
-#include "wola.ha.struct.h"
 #include "wola.ha.enums.h"
+#include "wola.ha.struct.h"
 
-#define SLAVE_ADDRESS 0x40   // Define the i2c address
-#define SIZE 32
-#define TEMPERATURE_PRECISION 12
-
-byte	ReceivedData[SIZE];
-char	Response2[SIZE];
-bool	DataReceived;
+#define OneWirePin 8
+#define DhtPin 4
+#define TEMPERATURE_PRECISION 10
+#define I2cAddress 0x41
 
 
-String returnMessage;
-// the setup function runs once when you press reset or power the board
+
+//t_i2cMessageFrame tMessage;
+t_i2cResponse Response;
+OneWire oneWire(OneWirePin);
+DallasTemperature sensors(&oneWire);
+int SensorsCount;
+float temps[10] = { 0,0,0,0,0,0,0,0,0,0 };
+bool ReciveMessage = false;
+
 void setup() {
-	Wire.begin(SLAVE_ADDRESS); //Jesteúmy slave numer 17
-	Wire.onReceive(receiveEvent); //Zg≥aszane przy wysy≥aniu (nadawca: Write)
-	Wire.onRequest(sendData); //Zg≥aszane przy øπdaniu odczytu (nadawca: Read)
-
 	Serial.begin(115200);
 	Serial.println("Inicjalizacja");
+	Wire.begin(I2cAddress); //Jeste≈•my slave numer 0x40
+	Wire.onReceive(receiveEvent); //Zg‚îÇaszane przy wysy‚îÇaniu (nadawca: Write)
+	Wire.onRequest(sendData); //Zg‚îÇaszane przy ‚îê‚ï£daniu odczytu (nadawca: Read)
 
-	DataReceived = false;
+
+	sensors.begin();						  // locate devices on the bus
+	SensorsCount = sensors.getDeviceCount();
+
+	Serial.print("Locating devices pin8 ...");
+	Serial.print("Found ");
+	Serial.print(sensors.getDeviceCount(), DEC);
+	Serial.println(" devices.");
+
+	//ustawienia rozdzielczosci
+	for (uint8_t i = 0; i < SensorsCount; i++)
+	{
+		DeviceAddress  add;
+		if (!sensors.getAddress(add, i)) Serial.println("Unable to find address for Device ");
+		sensors.setResolution(add, TEMPERATURE_PRECISION);
+		printResolution(sensors, add);
+	}
+
+
+
+
 }
 
-// the loop function runs over and over again until power down or reset
 void loop() {
 
-}
+	if (!ReciveMessage) {
 
-#pragma region I2C 
-void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtÛw
+
+		Serial.println("Requesting temperatures...");
+		sensors.requestTemperatures();
+
+		for (uint8_t i = 0; i < SensorsCount; i++)
+		{
+			DeviceAddress  add;
+			if (!sensors.getAddress(add, i))
+			{
+				Serial.print("Unable to find address for Device ");
+				printAddress(add);
+				Serial.println(".");
+				continue;
+			}
+			printData(sensors, add);
+			temps[i] = sensors.getTempC(add);
+		}
+
+		//readTempDht(4);
+	}
+	delay(5000);
+
+}
+#pragma region i2cComunication
+void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtÀáw
 	int j = 0;
+	byte	ReceivedData[sizeof(t_i2cMessageFrame)];
 	Serial.print("reciving...");
 	Serial.println(howMany);
 	while (Wire.available()) {
 		ReceivedData[j] = Wire.read();
 		j++;
 	}
-	DataReceived = true;
-	Serial.println("Recived data:");
-	Serial.println((char*)ReceivedData);
+	ReciveMessage = true;
 
 
 
-	TI2CMessageFrame tmp; //Re-make the struct
-	memcpy(&tmp, ReceivedData, sizeof(tmp));
-
-	recivedDataManager(tmp);
+	t_i2cMessageFrame tMessage; //Re-make the struct
+	memcpy(&tMessage, ReceivedData, sizeof(tMessage));
+	printMessage(tMessage);
+	recivedDataManager(tMessage);
 
 }
 
 void sendData() {
-	Serial.println("Sending respomse");
-	Wire.write(Response2, sizeof(Response2));
 
-	memset(Response2, 0, sizeof(Response2));
+	const int size = sizeof(t_i2cResponse);
+	char	Response2[size];
+	printResponse(Response);
+	memcpy(Response2, &Response, size);
 
+	/*Serial.println("Sending respomse");
+	for (size_t i = 0; i < size; i++)
+	{
+	Serial.print(i);
+	Serial.print("\t");
+	Serial.println((byte)Response2[i]);
+	}*/
+	Wire.write(Response2, size);
+
+	memset(Response2, 0, size);
+	memset(&Response, 0, size);
+
+	ReciveMessage = false;
 }
 #pragma endregion
 
-#pragma region Manager
-void recivedDataManager(TI2CMessageFrame message) {
+#pragma region ObslugaZapytania
+void recivedDataManager(t_i2cMessageFrame message) {
 
 	switch (message.Operation)
 	{
-	case Read:
-		Serial.println("Weszlo do read:");
-		MyStruct result;
-		result = readTemp(message);
+	case Temp:
+		Serial.println("Weszlo do temp:");
+		Response = readTemp(message);
+		break;
+	case Write:
+		if (message.Pin != 8)
+		{
+			pinMode(message.Pin, OUTPUT);
+			digitalWrite(message.Pin, message.Value);
+			Response.Status = OK;
+		}
+		Response.Status = WARRNING;
 
-		//char tempe[SIZE];
-		//floatToString(Response2, result.Temperature, 2);
-
-		memcpy(Response2, &result, sizeof(result));
-
-
-		Serial.print("Humidity: ");
-		Serial.print(result.Humidity);
-		Serial.print(" %\t");
-		Serial.print("Temperature: ");
-		Serial.print(result.Temperature);
-		Serial.println(" *C");
-
-		Serial.println(Response2);
 		break;
 
-	case Write:
+	case Read:
+		if (message.Pin != 8)
+		{
+			pinMode(message.Pin, INPUT);           // set pin to input
+			Response.Value = digitalRead(message.Pin);       // turn on pullup resistors
+			Response.Status = OK;
+		}
+		Response.Status = WARRNING;
+		break;
+
+	default:
+		break;
 
 	}
 
+
 }
 
-TMyStruct readTemp(TI2CMessageFrame message) {
-	TMyStruct result;
+
+t_i2cResponse readTemp(t_i2cMessageFrame message) {
+	t_i2cResponse result;
 	switch (message.TempSensor)
 	{
 	case Dht:
@@ -118,21 +176,16 @@ TMyStruct readTemp(TI2CMessageFrame message) {
 		break;
 
 	}
-
+	printResponse(result);
 
 	return result;
 
 }
-
-
-
-TMyStruct readTempDs18b20(int pin, byte address[8]) {
-
-	OneWire onewire(pin);
-	DallasTemperature sensors(&onewire);
+t_i2cResponse readTempDs18b20(int pin, byte address[8]) {
+	t_i2cResponse result;
 	float temperature;
-	Serial.println("POmiar temperatury");
-	sensors.begin();
+	Serial.println("Wyszukiwanie wyniku: ");
+
 
 	// arrays to hold device addresses
 	DeviceAddress insideThermometer;
@@ -140,54 +193,52 @@ TMyStruct readTempDs18b20(int pin, byte address[8]) {
 	{
 		insideThermometer[i] = (uint8_t)address[i];
 	}
-	if (!onewire.search(insideThermometer)) Serial.println("Unable to find address for insideThermometer");
+	Serial.print("Szukany adres");
+	printAddress(insideThermometer);
+	Serial.println(".");
 
-	// locate devices on the bus
-	Serial.print("Locating devices...");
-	Serial.print("Found ");
-	Serial.print(sensors.getDeviceCount(), DEC);
-	Serial.println(" devices.");
+	for (int i = 0; i < SensorsCount; i++)
+	{
+		DeviceAddress add;
 
-	// report parasite power requirements
-	Serial.print("Parasite power is: ");
-	if (sensors.isParasitePowerMode()) Serial.println("ON");
-	else Serial.println("OFF");
+		//odczytanie adresu z tablicy
+		if (sensors.getAddress(add, i)) {
+			Serial.print("Pozyycja: ");
+			Serial.print(i);
+			Serial.print("\t adres: ");
+			printAddress(add);
+			Serial.println(".");
+			// por√≥wnanie adresu 
+			if (CompareDeviceAddress(insideThermometer, add))
+			{
+				result.Temperature = temps[i];
+				result.Humidity = 0;
+				result.Status = OK;
+				result.Value = false;
+				Serial.print("Odczytana temperatura:");
+				Serial.println(result.Temperature);
+				return result;
+			}
+		}
 
-	sensors.setResolution(insideThermometer, TEMPERATURE_PRECISION);
-	Serial.print("Device 0 Resolution: ");
-	Serial.print(sensors.getResolution(insideThermometer), DEC);
-	Serial.println();
+	}
 
-	
-	float tempC = 0;
-	TMyStruct result;
+
+
 	result.Temperature = 0;
 	result.Humidity = 0;
-	if (sensors.requestTemperaturesByAddress(address))
-	{
-		delay(500);
-		tempC = sensors.getTempC(insideThermometer);
+	result.Status = ERROR;
+	result.Value = false;
 
 
-		Serial.print(tempC);
-		Serial.println(F(" 'C"));
-
-
-		result.Temperature = tempC;
-
-	}
-	else
-	{
-		Serial.println("B≥ad odczytu ");
-	}
 	return result;
 }
 
-TMyStruct readTempDht(int pin) {
-	TMyStruct result;
+t_i2cResponse readTempDht(int pin) {
+	t_i2cResponse result;
 
 	int type = 0;
-	
+
 	Serial.print("Dht type: ");
 	Serial.print(type);
 	Serial.print("    pin: ");
@@ -201,14 +252,98 @@ TMyStruct readTempDht(int pin) {
 	float t = dht.getTemperature();
 	if (isnan(t) || isnan(h)) {
 		Serial.println("Failed to read from DHT");
+		Serial.println(dht.getStatusString());
+		result.Status = ERROR;
 	}
 	else {
 
 		result.Temperature = t;
 		result.Humidity = h;
-
+		result.Status = OK;
 	}
 	return result;
 }
+
+bool CompareDeviceAddress(DeviceAddress add1, DeviceAddress add2) {
+	for (int i = 0; i < 8; i++)
+	{
+		if (add1[i] != add2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+
+
 #pragma endregion
+
+
+
+
+#pragma region PrintData
+// function to print a device address
+void printAddress(DeviceAddress deviceAddress)
+{
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		// zero pad the address if necessary
+		if (deviceAddress[i] < 16) Serial.print("0");
+		Serial.print(deviceAddress[i], HEX);
+	}
+}
+
+// function to print the temperature for a device
+void printTemperature(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	float tempC = sens.getTempC(deviceAddress);
+	Serial.print("Temp C: ");
+	Serial.print(tempC);
+	Serial.print(" Temp F: ");
+	Serial.print(DallasTemperature::toFahrenheit(tempC));
+}
+
+// function to print a device's resolution
+void printResolution(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	Serial.print("Resolution: ");
+	Serial.print(sens.getResolution(deviceAddress));
+	Serial.println();
+}
+
+// main function to print information about a device
+void printData(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	Serial.print("Device Address: ");
+	printAddress(deviceAddress);
+	Serial.print(" ");
+	printTemperature(sens, deviceAddress);
+	Serial.println();
+}
+void printMessage(t_i2cMessageFrame message) {
+	Serial.println("Message:");
+	Serial.print("Operacja:");
+	Serial.println(message.Operation);
+	Serial.print("Typ Czujnika:");
+	Serial.println(message.TempSensor);
+	Serial.print("Operacja:");
+	Serial.println(message.Pin);
+	Serial.print("Warto≈õƒá pinu:");
+	Serial.println(message.Value);
+}
+
+void printResponse(t_i2cResponse response) {
+	Serial.println("Response:");
+	Serial.print("Wilgotnosc: ");
+	Serial.print(response.Humidity);
+	Serial.print("\t Temp: ");
+	Serial.print(response.Temperature);
+	Serial.print("\t Staus: ");
+	Serial.print(response.Status);
+	Serial.print("\t Value: ");
+	Serial.println(response.Value);
+
+}
+#pragma endregion
+
 
