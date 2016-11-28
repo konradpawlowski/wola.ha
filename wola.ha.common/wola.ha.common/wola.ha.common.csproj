@@ -107,8 +107,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\DataBusType.cs" />
+    <Compile Include="DataModel\DebugTraceListener.cs" />
     <Compile Include="DataModel\LocalDb.cs" />
-    <Compile Include="DataModel\SensorsType.cs" />
+    <Compile Include="DataModel\SensorHumidityValues.cs" />
+    <Compile Include="DataModel\Sensors.cs" />
+    <Compile Include="DataModel\SensorOnOffValue.cs" />
+    <Compile Include="DataModel\SensorTemperatureValues.cs" />
+    <Compile Include="DataModel\SensorType.cs" />
     <Compile Include="Devices\MCP23017.cs" />
     <Compile Include="Enums\I2COperation.cs" />
     <Compile Include="Enums\TempSensorEnum.cs" />
