@@ -2,7 +2,10 @@
 <ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ArrayOfArrayOfString>
     <ArrayOfString>
-      <string>D:\OneDrive\Projekty\wola.ha\wola.ha.common\wola.ha.common\I2C\I2cHelper.cs</string>
+      <string>D:\OneDrive\Projekty\wola.ha\wola.ha.common\wola.ha.common\DataModel\SensorsType.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>d:\onedrive\projekty\wola.ha\wola.ha.common\wola.ha.common\datamodel\localdb.cs</string>
     </ArrayOfString>
   </ArrayOfArrayOfString>
 </ArrayOfArrayOfArrayOfString>
