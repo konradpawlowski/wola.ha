@@ -1,10 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
 
-namespace RPI2_I2C
+namespace wola.ha.common.Devices.I2c
 {
     public class I2CHelper
     {

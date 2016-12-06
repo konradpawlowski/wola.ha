@@ -1,4 +1,4 @@
-﻿namespace wola.ha.common
+﻿namespace wola.ha.common.Enums
 {
     public enum TempSensorEnum
     {
