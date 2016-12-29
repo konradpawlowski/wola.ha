@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.db", "wola.ha.db\wo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorsTempReadController", "SensorsTempReadController\SensorsTempReadController.csproj", "{5FD66FF8-3842-4F5F-9625-781140533B22}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduino.roomControl.slaveDevices", "..\wola.ha.arduino\wola.ha.arduino.roomControl.slaveDevices\wola.ha.arduino.roomControl.slaveDevices.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,16 @@ Global
 		{5FD66FF8-3842-4F5F-9625-781140533B22}.Release|x86.ActiveCfg = Release|x86
 		{5FD66FF8-3842-4F5F-9625-781140533B22}.Release|x86.Build.0 = Release|x86
 		{5FD66FF8-3842-4F5F-9625-781140533B22}.Release|x86.Deploy.0 = Release|x86
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|ARM.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x64.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|ARM.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x64.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,5 +114,6 @@ Global
 		{81F2DB74-DE83-4F0A-8321-A62711FB56D5} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
 		{5D9FB206-D53D-4C66-8B38-9C99723957F7} = {C08E8E98-5DAD-4495-9A3F-423AD742DDCE}
 		{5FD66FF8-3842-4F5F-9625-781140533B22} = {0CD692D4-6F75-4F97-835D-544A5FDD2FA1}
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
 	EndGlobalSection
 EndGlobal

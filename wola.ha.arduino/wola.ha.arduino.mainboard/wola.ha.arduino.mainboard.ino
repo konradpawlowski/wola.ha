@@ -1,4 +1,6 @@
-﻿#include <DHT.h>
+﻿#include <EEPROMVar.h>
+#include <EEPROMex.h>
+#include <DHT.h>
 #include "DallasTemperature.h"
 #include <Wire.h>
 #include <OneWire.h>
