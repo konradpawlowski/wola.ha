@@ -21,8 +21,9 @@
 
 
 
-TParameters settings = { "",0,"" };
-
+TParameters settings = { "" };
+TSensorValue Temp1Value = { 0,0 };
+TSensorValue Temp2Value = { 0,0 };
 
 
 void setup() {
@@ -49,6 +50,7 @@ void setup() {
 
 	//if you get here you have connected to the WiFi
 	Serial.println("connected...yeey :)");
+	settings = ReadSettings();
 	createWebServer();
 	server.begin();
 
@@ -59,8 +61,6 @@ void setup() {
 
 	Serial.print("reading settings");
 	//settings = ReadSettings();
-	Serial.println(settings.Id);
-	Serial.println(settings.Name);
 	Serial.println(settings.ServerAddress);
 
 }
@@ -89,7 +89,8 @@ String GetOpctionSite() {
 void SaveSettings(TParameters param) {
 	storeStruct(&param, sizeof(param));
 	//EEPROM_writeAnything(0, param);
-	
+	Serial.println("Zapis");
+	printTParameters(param);
 }
 
 TParameters ReadSettings() {
@@ -97,7 +98,10 @@ TParameters ReadSettings() {
 	TParameters param;
 
 	param = loadStruct();
-	//printTParameters(param);
+	//EEPROM_readAnything(0, param);
+	Serial.println("Odczyt");
+	printTParameters(param);
+	
 	return param;
 }
 void storeStruct(void *data_source, int size)
@@ -140,11 +144,37 @@ TParameters loadStruct()
 
 void printTParameters(TParameters param) {
 
-	Serial.print("Id:");
-	Serial.println(param.Id);
-	Serial.print("Name:");
-	Serial.println(param.Name);
+
 	Serial.print("Address:");
 	Serial.println(param.ServerAddress);
+
+	Serial.println("Temp1:");
+	Serial.print("Enble:");
+	Serial.println(param.Temp1.Enable);
+	Serial.print("Id:");
+	Serial.println(param.Temp1.Id);
+	Serial.print("Name:");
+	Serial.println(param.Temp1.Name);
+	
+	Serial.print("Pin:");
+	Serial.println(param.Temp1.Pin);
+	Serial.print("Typ:");
+	Serial.println(param.Temp1.Typ);
+
+	Serial.println("Temp2:");
+	Serial.print("Enble:");
+	Serial.println(param.Temp2.Enable);
+	Serial.print("Id:");
+	Serial.println(param.Temp2.Id);
+	Serial.print("Name:");
+	Serial.println(param.Temp2.Name);
+	Serial.print("Pin:");
+	Serial.println(param.Temp2.Pin);
+	Serial.print("Typ:");
+	Serial.println(param.Temp2.Typ);
+
+
+	
+
 
 }
