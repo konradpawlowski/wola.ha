@@ -8,6 +8,17 @@ String content;
 int statusCode;
 
 
+
+typedef struct RoomSensor {
+	int Id;
+	char Name[20];
+	char Address[16];
+	float Temp;
+
+
+}TRoomSensor;
+
+
 typedef struct TempDefinition {
 	int Pin; //TempSensorEnum
 	int Enable;

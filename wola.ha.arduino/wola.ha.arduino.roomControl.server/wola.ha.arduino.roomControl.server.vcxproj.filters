@@ -15,25 +15,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="wola.ha.arduino.mainboard.ino" />
+    <None Include="wola.ha.arduino.roomControl.server.ino" />
+    <None Include="WebPageGenerator.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.wola.ha.arduino.mainboard.vsarduino.h">
+    <ClInclude Include="..\libraries\DallasTemperature\DallasTemperature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wola.ha.struct.h">
+    <ClInclude Include="..\libraries\arduino-DHT-master\DHT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wola.ha.enums.h">
+    <ClInclude Include="..\libraries\OneWire\OneWire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Praca\Dokumenty\Dokumnety\Arduino\libraries\DallasTemperature\DallasTemperature.h">
+    <ClInclude Include="__vm\.wola.ha.arduino.roomControl.server.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Praca\Dokumenty\Dokumnety\Arduino\libraries\arduino-DHT-master\DHT.h">
+    <ClInclude Include="floatToString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Praca\Dokumenty\Dokumnety\Arduino\libraries\OneWire\OneWire.h">
+    <ClInclude Include="global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,47 +15,30 @@ void createWebServer()
 		content += "		<tr>";
 		content += "			<th scope='col'>Nazwa</th>";
 		content += "			<th scope='col'>Temperatura</th>";
-		if(settings.Temp1.Typ == Dht || settings.Temp2.Typ == Dht)
+	/*	if(settings.Temp1.Typ == Dht || settings.Temp2.Typ == Dht)
 			content += "			<th scope='col'>Wilgotność</th>";
-		
+	*/	
 		content += "		</tr>";
 		content += "	</thead>";
 		content += "	<tbody>";
-		if (settings.Temp1.Enable) {
-			content += "		<tr>";
-			content += "			<td align='center' valign='middle'>_TEMP1_NAME_</td>";
-			content += "			<td align='center' valign='middle'>_TEMP1_TEMPC_VAL_</td>";
-			if (settings.Temp1.Typ == Dht || settings.Temp2.Typ == Dht)
-				content += "			<td align='center' valign='middle'>_TEMP1_HUMI_VAL_</td>";
-			content += "		</tr>";
+		char buffer[25];
+		for(int i = 0; i<3; i++)
+		{
+			content += "<tr>";
+			content += "	<td align='center' valign='middle'>";
+			content += Sensors[i].Name;
+			content += "	</td>";
+			content += "	<td align='center' valign='middle'>";
+			content += floatToString(buffer, Sensors[i].Temp, 2);
+			content += "	</td>";
+			content += "</tr>";
 		}
-		if (settings.Temp2.Enable) {
-			content += "		<tr>";
-			content += "			<td align='center' valign='middle'>_TEMP2_NAME_</td>";
-			content += "			<td align='center' valign='middle'>_TEMP2_TEMPC_VAL_</td>";
-			if (settings.Temp1.Typ == Dht || settings.Temp2.Typ == Dht)
-				content += "			<td align='center' valign='middle'>_TEMP2_HUMI_VAL_</td>";
-			content += "		</tr>";
-		}
+		
 		content += "	</tbody>";
 		content += "</table>";
 
 		content += "<p>&nbsp;</p>";
 		content += "</html>";
-
-		char buffer[25];
-
-		content.replace("_TEMP1_NAME_", settings.Temp1.Name);
-		content.replace("_TEMP2_NAME_", settings.Temp2.Name);
-
-		content.replace("_TEMP1_TEMPC_VAL_", floatToString(buffer, Temp1Value.Temp, 2));
-		content.replace("_TEMP2_TEMPC_VAL_", floatToString(buffer, Temp2Value.Temp, 2));
-		if (settings.Temp1.Typ == Dht || settings.Temp2.Typ == Dht) {
-			content.replace("_TEMP1_HUMI_VAL_", floatToString(buffer, Temp1Value.Humi, 2));
-			content.replace("_TEMP2_HUMI_VAL_", floatToString(buffer, Temp2Value.Humi, 2));
-		}
-
-
 		server.send(200, "text/html", content);
 	});
 
@@ -239,4 +222,43 @@ void createWebServer()
 		server.send(statusCode, "application/json", content);
 	});
 
+	server.on("/temp", []() {
+		int id = 0;
+		float temp = 0;
+		String name = "";
+		TParameters param;
+		String ipAddress = "";
+		Serial.println("Weszło:");
+		if (server.arg("Id").length() > 0 && server.arg("Temperatura").length() > 0) {
+			id = server.arg("Id").toInt();
+			temp = server.arg("Temperatura").toFloat();
+			name = server.arg("Name");
+			ipAddress = server.arg("ipAddress");
+			Sensors[id].Id = id;
+			name.toCharArray(Sensors[id].Name, 20);
+			name.toCharArray(Sensors[id].Address, 20);
+			Sensors[id].Temp = temp;
+			
+
+
+
+			Serial.println("Id: ");
+			Serial.println(id);
+			
+
+			Serial.println("Temp: ");
+			Serial.println(temp);
+			
+			content = "{\"Success\"}";
+			statusCode = 200;
+		}
+		else {
+			content = "{\"Error\":\"404 not found\"}";
+			statusCode = 404;
+			Serial.println("Sending 404");
+
+		}
+
+		server.send(statusCode, "application/json", content);
+	});
 }

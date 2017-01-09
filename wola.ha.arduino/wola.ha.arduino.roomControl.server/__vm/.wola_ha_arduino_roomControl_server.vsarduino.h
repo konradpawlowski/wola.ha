@@ -107,5 +107,5 @@ typedef long __PTRDIFF_TYPE__;
 #define interrupts() sei()
 #define noInterrupts() cli()
 
-#include "wola.ha.arduino.mainboard.ino"
+#include "wola_ha_arduino_roomControl_server.ino"
 #endif

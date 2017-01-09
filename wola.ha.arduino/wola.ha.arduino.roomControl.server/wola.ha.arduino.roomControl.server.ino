@@ -20,7 +20,7 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 #include "global.h"
-#include "EEPROMAnything.h"
+
 
 #define TEMP1 14 
 #define TEMP2 16 
@@ -29,6 +29,8 @@
 TParameters settings = { "" };
 TSensorValue Temp1Value = { 0,0 };
 TSensorValue Temp2Value = { 0,0 };
+
+TRoomSensor Sensors[3] = { {0},{1},{2} };
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
@@ -59,10 +61,10 @@ void setup() {
 	//if you get here you have connected to the WiFi
 	Serial.println("connected...yeey :)");
 	settings = ReadSettings();
-	
+
 	if (settings.Temp1.Typ == Ds18b20)
 	{
-		
+
 		DallasTemperature sensorsTemp1(&oneWireTemp1);
 	}
 	if (settings.Temp1.Typ == Ds18b20)
@@ -160,7 +162,7 @@ TParameters ReadSettings() {
 	//EEPROM_readAnything(0, param);
 	Serial.println("Odczyt");
 	printTParameters(param);
-	
+
 	return param;
 }
 
@@ -176,9 +178,9 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	case Temp2:
 		sensors.setOneWire(&oneWireTemp2);
 		break;
-	
+
 	}
-	
+
 	// Request temperature conversion (traditional)
 	Serial.println("Before blocking requestForConversion");
 	unsigned long start = millis();
@@ -240,13 +242,13 @@ SensorValue readTempDht(int pin) {
 	if (isnan(t) || isnan(h)) {
 		Serial.println("Failed to read from DHT");
 		Serial.println(dht.getStatusString());
-		
+
 	}
 	else {
 
 		result.Temp = t;
 		result.Humi = h;
-	
+
 	}
 	return result;
 }
