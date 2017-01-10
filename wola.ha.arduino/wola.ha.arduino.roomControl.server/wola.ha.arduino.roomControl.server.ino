@@ -25,7 +25,7 @@
 #define TEMP1 14 
 #define TEMP2 16 
 
-
+TSensorsOnOffValue ValuesOnOff[10];
 TParameters settings = { "" };
 TSensorValue Temp1Value = { 0,0 };
 TSensorValue Temp2Value = { 0,0 };
@@ -39,7 +39,7 @@ int i = 0;
 void setup() {
 	// put your setup code here, to run once:
 	Serial.begin(115200);
-	//EEPROM.begin(MEMORY_SIZE);
+	EEPROM.begin(512);
 	//WiFiManager
 	//Local intialization. Once its business is done, there is no need to keep it around
 	WiFiManager wifiManager;
@@ -61,6 +61,9 @@ void setup() {
 	//if you get here you have connected to the WiFi
 	Serial.println("connected...yeey :)");
 	settings = ReadSettings();
+	
+	
+
 
 	if (settings.Temp1.Typ == Ds18b20)
 	{
@@ -252,3 +255,10 @@ SensorValue readTempDht(int pin) {
 	}
 	return result;
 }
+
+
+
+
+
+	
+

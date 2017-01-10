@@ -206,9 +206,12 @@ void createWebServer()
 			  param.Temp2.Typ = server.arg("Temp2_Type").toInt();
 
 		
-
+			  param.CountOfSensors = 3;
 			  printTParameters(param);
 			  SaveSettings(param);
+
+			
+
 			  settings = param;
 			  content = "{\"Success\":\"saved to eeprom... reset to boot into new wifi\"}";
 			  statusCode = 200;
@@ -261,4 +264,40 @@ void createWebServer()
 
 		server.send(statusCode, "application/json", content);
 	});
+
+server.on("/temp1", []() {
+	TSensorsOnOffValue para;
+	para.Id = 1;
+	para.IsOutside = 1;
+	para.Temp = 19.5;
+	int aaa = 19;
+	for (int i = 0; i < 10; i++)
+	{
+		settings.sens[i].Id = i;
+		settings.sens[i].Temp = 19, 5 + i;
+		settings.sens[i].IsOutside = i;
+
+	}
+
+	settings.sens[0] = para;
+	SaveSettings(settings);
+
+
+			  content = "{\"Success\"}";
+			  statusCode = 200;
+			  server.send(statusCode, "application/json", content);
+});
+server.on("/temp2", []() {
+	
+	for (int i = 0; i < 10; i++)
+	{
+
+		printValuesOnOff(settings.sens[i]);
+	}
+
+
+	content = "{\"Success\"}";
+	statusCode = 200;
+	server.send(statusCode, "application/json", content);
+});
 }
