@@ -1,9 +1,11 @@
 ﻿
 String ContentIndex() {
+	long mil = millis() / 1000;
 	String content;
 	content = "<!DOCTYPE HTML>\r\n<html>";
 	content += "<meta http-equiv=\"refresh\" content=\"10\">  ";
 	content += "</p><form method='get' action='saveTemp'>";
+	content += "<p align='right'>Czas od uruchomienia: " + time(mil) + "</p>";
 	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a></strong></p>";
 	content += "<table align='center' border='1' cellpadding='1' cellspacing='1' style='width:600px;'>";
 	content += "	<caption>";

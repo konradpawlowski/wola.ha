@@ -28,6 +28,17 @@
 #define P1 4
 #define P2 5
 
+/* Useful Constants */
+#define SECS_PER_MIN  (60UL)
+#define SECS_PER_HOUR (3600UL)
+#define SECS_PER_DAY  (SECS_PER_HOUR * 24L)
+/* Useful Macros for getting elapsed time */
+#define numberOfSeconds(_time_) (_time_ % SECS_PER_MIN)  
+#define numberOfMinutes(_time_) ((_time_ / SECS_PER_MIN) % SECS_PER_MIN) 
+#define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
+#define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)  
+
+
 //TSensorsOnOffValue ValuesOnOff[10]; // wartoœci progowa czujnika
 TParameters settings = { "" };
 TSensorValue Temp1Value;// = { 0,0 };
@@ -297,4 +308,34 @@ void SetRelay() {
 	}
 	Serial.print("Przekaznik: ");
 	Serial.println(value);
+}
+String time(long val) {
+	String ret = "";
+	int days = elapsedDays(val);
+	int hours = numberOfHours(val);
+	int minutes = numberOfMinutes(val);
+	int seconds = numberOfSeconds(val);
+
+	// digital clock display of current time
+	Serial.print(days, DEC);
+	ret = String(days);
+	ret += printDigits(hours);
+	ret += printDigits(minutes);
+	ret += printDigits(seconds);
+	Serial.println();
+
+	return ret;
+}
+String printDigits(byte digits) {
+	String val = ":";
+	// utility function for digital clock display: prints colon and leading 0
+	Serial.print(":");
+	if (digits < 10)
+	{
+		Serial.print('0');
+		val += "0";
+	}
+	val += String(digits);
+	Serial.print(digits, DEC);
+	return val;
 }
