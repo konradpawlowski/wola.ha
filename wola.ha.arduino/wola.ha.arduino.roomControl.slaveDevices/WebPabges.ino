@@ -97,6 +97,17 @@ String ContentUstawienia() {
 	content += "			<td><br />";
 	content += "			&nbsp;<select name=\"Temp1_Type\" size=\"2\"><option _TEMP1_TYPE1_ value=\"1\">DS18B20</option><option _TEMP1_TYPE0_ value=\"0\">DHT</option></select></td>";
 	content += "		</tr>";
+
+	content += "		<tr>";
+	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
+	content += "			<td><br />";
+	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_IsOutside\" type=\"checkbox\" ";
+	if (settings.Temp1.IsOutside == 1)
+		content += "checked";
+	content += "/>​</td>";
+	content += "		</tr>";
+
+
 	content += "	</tbody>";
 	content += "</table>";
 	content += "";
@@ -124,6 +135,17 @@ String ContentUstawienia() {
 	content += "			<td><strong>Typ czujnika</strong></td>";
 	content += "			<td><br />";
 	content += "			&nbsp;<select name=\"Temp2_Type\" size=\"2\"><option _TEMP2_TYPE1_ value=\"1\">DS18B20</option><option _TEMP2_TYPE0_ value=\"0\">DHT</option></select></td>";
+	content += "		</tr>";
+
+	content += "		<tr>";
+	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
+	content += "			<td><br />";
+	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_IsOutside\" type=\"checkbox\" ";
+	if (settings.Temp2.IsOutside == 1)
+		content += "checked";
+	content += "/>​</td>";
+
+
 	content += "		</tr>";
 	content += "	</tbody>";
 	content += "</table>";

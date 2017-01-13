@@ -13,21 +13,32 @@ void createWebServer()
 	});
 	server.on("/setting", []() {
 		
-		TParameters param;
+		TParameters param =settings;
 		  if (server.arg("Temp1_Id").length() > 0 && server.arg("Temp1_Name").length() > 0) {
 			  param.Temp1.Id = server.arg("Temp1_Id").toInt();
 			  server.arg("Temp1_Name").toCharArray(param.Temp1.Name, 20);
 			  
 			  server.arg("ServerAddress").toCharArray(param.ServerAddress, 16);
 
-			  if (server.arg("Temp1_Enable").length() > 0)
-			  {
-				  param.Temp1.Enable = 1;
-			  }
+			  if (server.hasArg("Temp1_Enable"))
+				param.Temp1.Enable = 1;
 			  else
-			  {
-				  param.Temp1.Enable = 0;
-			  }
+				param.Temp1.Enable = 0;
+			  
+
+			  if (server.hasArg("Temp1_IsOutside"))
+				  param.Temp1.IsOutside = 1;
+			  else
+				  param.Temp1.IsOutside = 0;
+
+			  if (server.hasArg("Temp2_IsOutside"))
+				  param.Temp2.IsOutside = 1;
+			  else
+				  param.Temp2.IsOutside = 0;
+
+
+			  if (server.hasArg("SelectedRelay"))
+				  param.SelectedRelay = server.arg("SelectedRelay").toInt();
 			  Serial.println("temp1: ");
 			  Serial.println(server.arg("Temp1_Enable"));
 			  Serial.println(server.arg("Temp1_Type"));
@@ -41,7 +52,7 @@ void createWebServer()
 			  param.Temp1.Pin = (int)Temp1;
 			  param.Temp1.Typ = server.arg("Temp1_Type").toInt();
 
-			  if (server.arg("Temp2_Enable").length() > 0)
+			  if (server.hasArg("Temp2_Enable"))
 				  param.Temp2.Enable = 1;
 			  else
 				  param.Temp2.Enable = 0;
@@ -95,6 +106,9 @@ void createWebServer()
 
 		if (server.hasArg("Name"))
 			server.arg("Name").toCharArray(Sensors[id].Name,20);
+
+		if (server.hasArg("IsOutside"))
+			Sensors[id].IsOutside = server.arg("IsOutside").toInt();
 		
 		Sensors[id].Time = millis();
 			Serial.println("Id: ");
@@ -115,6 +129,8 @@ void createWebServer()
 
 	server.on("/temp2", []() {
 	
+		TParameters para = ReadSettings();
+		printTParameters(para);
 		for (int i = 0; i < 10; i++)
 		{
 

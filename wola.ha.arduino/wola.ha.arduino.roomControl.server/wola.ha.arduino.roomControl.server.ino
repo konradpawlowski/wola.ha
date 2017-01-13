@@ -25,6 +25,8 @@
 
 #define TEMP1 14 
 #define TEMP2 16 
+#define P1 4
+#define P2 5
 
 //TSensorsOnOffValue ValuesOnOff[10]; // wartoœci progowa czujnika
 TParameters settings = { "" };
@@ -91,6 +93,10 @@ void setup() {
 	//settings = ReadSettings();
 	Serial.println(settings.ServerAddress);
 
+
+	// Ustawienie GPIO przekaznika
+	pinMode(P1, OUTPUT);
+	pinMode(P2, OUTPUT);
 }
 
 void loop() {
@@ -101,10 +107,11 @@ void loop() {
 		Serial.println("Temp:");
 		GetTemp();
 		i = 0;
-		SetTempInServer();
+		SetTempInServer(); 
+		SetRelay();
 	}
 	
-	//Serial.println(millis());
+	
 	delay(100);
 }
 void SetTempInServer() {
@@ -152,16 +159,12 @@ void GetTemp() {
 		}
 	}
 }
-
-
-
 void SaveSettings(TParameters param) {
 	storeStruct(&param, sizeof(param));
 	//EEPROM_writeAnything(0, param);
 	Serial.println("Zapis");
 	printTParameters(param);
 }
-
 TParameters ReadSettings() {
 
 	TParameters param;
@@ -173,8 +176,6 @@ TParameters ReadSettings() {
 
 	return param;
 }
-
-
 float GetTempDs18b20(TempSensorEnum temp) {
 	DallasTemperature sensors;
 
@@ -230,7 +231,6 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	Serial.println("\n\n\n\n");
 	return sensors.getTempCByIndex(0);
 }
-
 TSensorValue readTempDht(int pin) {
 	TSensorValue result;
 
@@ -259,4 +259,42 @@ TSensorValue readTempDht(int pin) {
 
 	}
 	return result;
+}
+byte CheckTemp() {
+	byte val = LOW;
+	for (int i = 0; i < settings.CountOfSensors; i++) {
+
+		// sprawdzenie czasu nieaktywnosci czujnika
+		// jesli czas ==0 lub czas nieaktywanosci wynosi wiecej niz 10 min
+		if (Sensors[i].Time == 0 || ((millis() - Sensors[i].Time) / 1000) > 600)
+			val = LOW;
+		else {
+			if (Sensors[i].IsOutside) {
+				if (Sensors[i].Temp > settings.sens[i].Temp)
+					return LOW;
+
+			}
+			else
+			{
+				if (Sensors[i].Temp < settings.sens[i].Temp)
+					val = HIGH;
+			}
+		}
+	}
+	return val;
+}
+void SetRelay() {
+	byte value = CheckTemp();
+	
+	switch (settings.SelectedRelay) {
+	case Relay1:
+		digitalWrite(P1, value);
+		break;
+	case Relay2:
+		digitalWrite(P2, value);
+		break;
+	
+	}
+	Serial.print("Przekaznik: ");
+	Serial.println(value);
 }

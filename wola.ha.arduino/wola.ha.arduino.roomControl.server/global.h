@@ -15,7 +15,7 @@ typedef struct RoomSensor {
 	char Address[16];
 	float Temp;
 	int Time;
-
+	int IsOutside;
 
 }TRoomSensor;
 
@@ -26,6 +26,8 @@ typedef struct TempDefinition {
 	int Typ; //TempSensorTypeEnum
 	char Name[20];
 	int Id;
+	int IsOutside;
+	
 } TTempDefinition;
 
 typedef struct SensorsOnOffValue {
@@ -45,7 +47,7 @@ typedef struct Parameters{
 
   int CountOfSensors;
   TSensorsOnOffValue sens[10];
-  
+  int SelectedRelay;
 }TParameters;
 
 typedef struct SensorValue {
@@ -53,6 +55,8 @@ typedef struct SensorValue {
 	String Name;
 	float Temp;
 	float Humi;
+	int IsOutside;
+
 
 }TSensorValue;
 
@@ -62,6 +66,12 @@ typedef struct SensorValue {
 	Temp2 = 16
 
 } ;
+
+ enum PrzekaznikEnum
+ {
+	 Relay1 = 4,
+	 Relay2 = 5
+ };
 enum TempSensorTypeEnum
 {
 	Dht,
@@ -143,6 +153,9 @@ void printTParameters(TParameters param) {
 	Serial.print("Typ:");
 	Serial.println(param.Temp1.Typ);
 
+	Serial.print("IsOutside:");
+	Serial.println(param.Temp1.IsOutside);
+
 	Serial.println("Temp2:");
 	Serial.print("Enble:");
 	Serial.println(param.Temp2.Enable);
@@ -154,7 +167,11 @@ void printTParameters(TParameters param) {
 	Serial.println(param.Temp2.Pin);
 	Serial.print("Typ:");
 	Serial.println(param.Temp2.Typ);
+	Serial.print("IsOutside:");
+	Serial.println(param.Temp2.IsOutside);
 
+	Serial.print("Selected relay:");
+	Serial.println(param.SelectedRelay);
 
 	Serial.print("Iloœæ czujników :");
 	Serial.println(param.CountOfSensors);

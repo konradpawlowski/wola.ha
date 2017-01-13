@@ -31,6 +31,18 @@ void createWebServer()
 			  {
 				  param.Temp1.Enable = 0;
 			  }
+
+			  if (server.hasArg("TEMP1_IsOutside"))
+				  param.Temp1.IsOutside = server.arg("TEMP1_IsOutside").toInt();
+			  else
+				  param.Temp1.IsOutside = 0;
+
+			  if (server.hasArg("TEMP2_IsOutside"))
+				  param.Temp2.IsOutside = server.arg("TEMP2_IsOutside").toInt();
+			  else
+				  param.Temp2.IsOutside = 0;
+
+
 			  Serial.println("temp1: ");
 			  Serial.println(server.arg("Temp1_Enable"));
 			  Serial.println(server.arg("Temp1_Type"));

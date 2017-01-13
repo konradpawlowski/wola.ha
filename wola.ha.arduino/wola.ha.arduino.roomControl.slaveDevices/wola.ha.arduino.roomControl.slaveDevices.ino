@@ -124,6 +124,7 @@ void GetTemp() {
 		}
 		Temp1Value.Id = settings.Temp1.Id;
 		Temp1Value.Name = String(settings.Temp1.Name);
+		Temp1Value.IsOutside = settings.Temp1.IsOutside;
 		
 	}
 	if (settings.Temp2.Enable) {
@@ -139,6 +140,7 @@ void GetTemp() {
 		}
 		Temp2Value.Id = settings.Temp2.Id;
 		Temp2Value.Name = String(settings.Temp2.Name);
+		Temp2Value.IsOutside = settings.Temp2.IsOutside;
 	}
 }
 
@@ -273,6 +275,7 @@ void SendTemp(TSensorValue val) {
 	address += "&Name=" + val.Name;
 	address += "&Temperatura="+ String(val.Temp);
 	address += "&ipAddress=" + WiFi.localIP().toString();
+	address += "&IsOutside=" + String(val.IsOutside);
 	
 	Serial.print("connecting to ");
 	Serial.println(host);

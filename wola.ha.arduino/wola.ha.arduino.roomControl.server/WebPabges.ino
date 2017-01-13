@@ -2,8 +2,9 @@
 String ContentIndex() {
 	String content;
 	content = "<!DOCTYPE HTML>\r\n<html>";
-	content += "<meta http-equiv=\"refresh\" content=\"60\">  ";
+	content += "<meta http-equiv=\"refresh\" content=\"10\">  ";
 	content += "</p><form method='get' action='saveTemp'>";
+	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a></strong></p>";
 	content += "<table align='center' border='1' cellpadding='1' cellspacing='1' style='width:600px;'>";
 	content += "	<caption>";
 	content += "	<h2>Czujniki</h2>";
@@ -14,7 +15,7 @@ String ContentIndex() {
 	content += "			<th scope='col' style='width:200px;'>Temperatura</th>";
 	content += "			<th scope='col' style='width:200px;'>Ustawiona temperatura</th>";
 	content += "			<th scope='col' style='width:200px;'>Czas pomiaru</th>";
-	
+//	content += "			<th scope='col' style='width:200px;'>Zewnetrzny</th>";
 	content += "		</tr>";
 	content += "	</thead>";
 	content += "	<tbody>";
@@ -40,6 +41,11 @@ String ContentIndex() {
 		content += "	<td align='center' valign='middle'>";
 		content += String((millis() - Sensors[i].Time)/1000);
 		content += "	</td>";
+
+		content += "	</td>";
+		/*content += "	<td align='center' valign='middle'>";
+		content += String(Sensors[i].IsOutside);
+		content += "	</td>";*/
 		content += "</tr>";
 	}
 
@@ -77,6 +83,19 @@ String ContentUstawienia() {
 	}
 
 	content += "</select></h3></p>";
+
+	content += "<p><h3>Załaczenie pieca: <select name='SelectedRelay' size='1'>";
+	content += "<option ";
+	if (4 == settings.SelectedRelay)
+		content += "selected = 'selected' ";
+	content += "value = '4'>Przekaźnik 1</option> ";
+	content += "<option ";
+	if (5 == settings.SelectedRelay)
+		content += "selected = 'selected' ";
+	content += "value = '5'>Przekaźnik 2</option> ";
+
+	content += "</select></h3></p>";
+
 	content += "";
 	content += "<h3><strong>Konfiguracja czujnik&oacute;w </strong></h3>";
 	content += "";
@@ -105,6 +124,16 @@ String ContentUstawienia() {
 	content += "			<td><br />";
 	content += "			&nbsp;<select name=\"Temp1_Type\" size=\"2\"><option _TEMP1_TYPE1_ value=\"1\">DS18B20</option><option _TEMP1_TYPE0_ value=\"0\">DHT</option></select></td>";
 	content += "		</tr>";
+
+	content += "		<tr>";
+	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
+	
+	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_IsOutside\" type=\"checkbox\" ";
+	if (settings.Temp1.IsOutside == 1)
+		content += "checked";
+	content += "/>​</td>";
+	content += "		</tr>";
+
 	content += "	</tbody>";
 	content += "</table>";
 	content += "";
@@ -133,6 +162,16 @@ String ContentUstawienia() {
 	content += "			<td><br />";
 	content += "			&nbsp;<select name=\"Temp2_Type\" size=\"2\"><option _TEMP2_TYPE1_ value=\"1\">DS18B20</option><option _TEMP2_TYPE0_ value=\"0\">DHT</option></select></td>";
 	content += "		</tr>";
+
+	content += "		<tr>";
+	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
+
+	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_IsOutside\" type=\"checkbox\" ";
+	if (settings.Temp2.IsOutside == 1)
+		content += "checked";
+	content += "/>​</td>";
+	content += "		</tr>";
+
 	content += "	</tbody>";
 	content += "</table>";
 	content += "";

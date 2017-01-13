@@ -14,6 +14,7 @@ typedef struct TempDefinition {
 	int Typ; //TempSensorTypeEnum
 	char Name[20];
 	int Id;
+	int IsOutside;
 } TTempDefinition;
 
 typedef struct Parameters{
@@ -29,6 +30,7 @@ typedef struct SensorValue {
 	String Name;
 	float Temp;
 	float Humi;
+	int IsOutside;
 
 }TSensorValue;
 
