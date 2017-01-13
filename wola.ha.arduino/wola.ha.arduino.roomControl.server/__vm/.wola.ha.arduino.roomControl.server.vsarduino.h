@@ -105,5 +105,6 @@ typedef long __PTRDIFF_TYPE__;
 #define noInterrupts() cli()
 
 #include "wola.ha.arduino.roomControl.server.ino"
+#include "WebPabges.ino"
 #include "WebPageGenerator.ino"
 #endif

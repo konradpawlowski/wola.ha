@@ -1,4 +1,5 @@
 
+#include <ESP8266HTTPClient.h>
 #include <DHT.h>
 #include <DallasTemperature.h>
 #include <OneWire.h>
@@ -20,17 +21,17 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 #include "global.h"
-
+#include "floatToString.h"
 
 #define TEMP1 14 
 #define TEMP2 16 
 
-TSensorsOnOffValue ValuesOnOff[10];
+//TSensorsOnOffValue ValuesOnOff[10]; // wartoœci progowa czujnika
 TParameters settings = { "" };
-TSensorValue Temp1Value = { 0,0 };
-TSensorValue Temp2Value = { 0,0 };
+TSensorValue Temp1Value;// = { 0,0 };
+TSensorValue Temp2Value;// = { 0,0 };
 
-TRoomSensor Sensors[3] = { {0},{1},{2} };
+TRoomSensor Sensors[10] ; //wartoœci czujnikó
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
@@ -100,11 +101,31 @@ void loop() {
 		Serial.println("Temp:");
 		GetTemp();
 		i = 0;
+		SetTempInServer();
 	}
+	
 	//Serial.println(millis());
 	delay(100);
 }
+void SetTempInServer() {
+	char buff[100];
+	if (settings.Temp1.Enable) {
+		WiFi.localIP().toString().toCharArray(Sensors[settings.Temp1.Id].Address, 16);
+		String(settings.Temp1.Name).toCharArray(Sensors[settings.Temp1.Id].Name,20);
+		Sensors[settings.Temp1.Id].Temp = Temp1Value.Temp;
+		Sensors[settings.Temp1.Id].Time = millis();
+		
 
+	}
+
+	if (settings.Temp2.Enable) {
+		WiFi.localIP().toString().toCharArray(Sensors[settings.Temp2.Id].Address, 16);
+		String(settings.Temp2.Name).toCharArray(Sensors[settings.Temp2.Id].Name,20);
+		Sensors[settings.Temp2.Id].Temp = Temp2Value.Temp;
+		Sensors[settings.Temp2.Id].Time = millis();
+
+	}
+}
 void GetTemp() {
 	if (settings.Temp1.Enable) {
 		switch (settings.Temp1.Typ)
@@ -133,22 +154,6 @@ void GetTemp() {
 }
 
 
-
-String GetOpctionSite() {
-
-	// Prepare the response
-	String s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\n";
-
-	s += "\r\n";
-	s += " <h1>Ustawienia</h1> ";
-	s += "<p><strong>Nazwa</strong>: <input name=\"name\" type=\"text\" />&nbsp;</p> ";
-	s += "<p><strong>Identyfikator</strong>: <input name=\"id\" type=\"text\" />&nbsp;</p> ";
-	s += "<input type='submit' value='Zapisz'>";
-	s += "\r\n";
-	s += "</html>\n";
-
-	return s;
-}
 
 void SaveSettings(TParameters param) {
 	storeStruct(&param, sizeof(param));
@@ -226,8 +231,8 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	return sensors.getTempCByIndex(0);
 }
 
-SensorValue readTempDht(int pin) {
-	SensorValue result;
+TSensorValue readTempDht(int pin) {
+	TSensorValue result;
 
 	int type = 0;
 
@@ -255,10 +260,3 @@ SensorValue readTempDht(int pin) {
 	}
 	return result;
 }
-
-
-
-
-
-	
-

@@ -14,6 +14,7 @@ typedef struct RoomSensor {
 	char Name[20];
 	char Address[16];
 	float Temp;
+	int Time;
 
 
 }TRoomSensor;
@@ -48,6 +49,8 @@ typedef struct Parameters{
 }TParameters;
 
 typedef struct SensorValue {
+	int Id;
+	String Name;
 	float Temp;
 	float Humi;
 

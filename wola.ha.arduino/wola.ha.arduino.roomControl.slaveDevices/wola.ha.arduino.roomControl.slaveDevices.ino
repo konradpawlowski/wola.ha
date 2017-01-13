@@ -21,20 +21,23 @@
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 #include "global.h"
 #include "EEPROMAnything.h"
+#include "floatToString.h"
 
 #define TEMP1 14 
 #define TEMP2 16 
 
 
 TParameters settings = { "" };
-TSensorValue Temp1Value = { 0,0 };
-TSensorValue Temp2Value = { 0,0 };
+TSensorValue Temp1Value;// = { 0,0 };
+TSensorValue Temp2Value;// = { 0,0 };
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
 
 int i = 0;
 void setup() {
+	Serial.println("Clear eeprom");
+	//ClearEeprom();
 	// put your setup code here, to run once:
 	Serial.begin(115200);
 	//EEPROM.begin(MEMORY_SIZE);
@@ -91,11 +94,18 @@ void loop() {
 	i++;
 	server.handleClient();
 
-	if (i == 100) {
+	if (i % 100 == 0) {
 		Serial.println("Temp:");
 		GetTemp();
 		i = 0;
 	}
+	if (i % 300 == 0) {
+		if (settings.Temp1.Enable)
+			SendTemp(Temp1Value);
+		if (settings.Temp2.Enable)
+			SendTemp(Temp2Value);
+	}
+
 	//Serial.println(millis());
 	delay(100);
 }
@@ -112,6 +122,9 @@ void GetTemp() {
 			break;
 
 		}
+		Temp1Value.Id = settings.Temp1.Id;
+		Temp1Value.Name = String(settings.Temp1.Name);
+		
 	}
 	if (settings.Temp2.Enable) {
 		switch (settings.Temp2.Typ)
@@ -124,6 +137,8 @@ void GetTemp() {
 			break;
 
 		}
+		Temp2Value.Id = settings.Temp2.Id;
+		Temp2Value.Name = String(settings.Temp2.Name);
 	}
 }
 
@@ -248,5 +263,57 @@ SensorValue readTempDht(int pin) {
 		result.Humi = h;
 	
 	}
+
 	return result;
+}
+void SendTemp(TSensorValue val) {
+	char* host = settings.ServerAddress;
+		
+	String address = "/temp?Id=" + String(val.Id);
+	address += "&Name=" + val.Name;
+	address += "&Temperatura="+ String(val.Temp);
+	address += "&ipAddress=" + WiFi.localIP().toString();
+	
+	Serial.print("connecting to ");
+	Serial.println(host);
+
+	// Use WiFiClient class to create TCP connections
+	WiFiClient client;
+	const int httpPort = 80;
+	if (!client.connect(host, httpPort)) {
+		Serial.println("connection failed");
+		return;
+	}
+
+	Serial.print("Requesting URL: ");
+	Serial.println(address);
+
+	// This will send the request to the server
+	client.print(String("GET ") + address + " HTTP/1.1\r\n" +
+		"Host: " + host + "\r\n" +
+		"Connection: close\r\n\r\n");
+	unsigned long timeout = millis();
+	while (client.available() == 0) {
+		if (millis() - timeout > 5000) {
+			Serial.println(">>> Client Timeout !");
+			client.stop();
+			return;
+		}
+	}
+
+	// Read all the lines of the reply from server and print them to Serial
+	while (client.available()) {
+		String line = client.readStringUntil('\r');
+		Serial.print(line);
+	}
+
+	Serial.println();
+	Serial.println("closing connection");
+
+
+}
+void ClearEeprom() {
+	for (int i = 0; i < 1024; i++) {
+		EEPROM.write(i, 0);
+	}
 }

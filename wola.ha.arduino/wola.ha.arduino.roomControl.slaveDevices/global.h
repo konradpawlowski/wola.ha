@@ -25,6 +25,8 @@ typedef struct Parameters{
 }TParameters;
 
 typedef struct SensorValue {
+	int Id;
+	String Name;
 	float Temp;
 	float Humi;
 
