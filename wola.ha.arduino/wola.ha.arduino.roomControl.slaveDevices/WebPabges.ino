@@ -6,6 +6,9 @@ String ContentIndex() {
 	content += "	<caption>";
 	content += "	<h2>Czujniki</h2>";
 	content += "	</caption>";
+	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a>";
+	content += "</br><a href=\"http://" + String(settings.ServerAddress) + "\">Serwer</a>";
+	content += "</strong></p>";
 	content += "	<thead>";
 	content += "		<tr>";
 	content += "			<th scope='col'>Nazwa</th>";
@@ -69,6 +72,7 @@ String ContentUstawienia() {
 	String content = "<!DOCTYPE HTML>\r\n<html>";
 	content += "</p><form method='get' action='setting'>";
 	content += "<h3><strong>Adres serwera:&nbsp;<input maxlength=\"16\" name=\"ServerAddress\" size=\"16\" type=\"text\" value=\"_SERVER_ADDRESS_\" />​</strong></h3>";
+	
 	content += "";
 	content += "<h3><strong>Konfiguracja czujnik&oacute;w </strong></h3>";
 	content += "";
@@ -164,7 +168,9 @@ String ContentUstawienia() {
 	content += "";
 	content += "<p>&nbsp;</p>";
 	content += "";
-	content += "<p><input type=\"submit\" value=\"Zapisz\" /></p>";
+	content += "<p></br><input type=\"submit\" value=\"Zapisz\" /></p>";
+	content += "<p></br><strong><a href=\"http://" + WiFi.localIP().toString() + "\">Powrót</a>";
+	content += "</strong></p>";
 	content += "</form>";
 	content += "</html>";
 

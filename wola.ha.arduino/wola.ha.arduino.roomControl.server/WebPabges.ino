@@ -189,7 +189,8 @@ String ContentUstawienia() {
 	content += "";
 	content += "<p>&nbsp;</p>";
 	content += "";
-	content += "<p><input type=\"submit\" value=\"Zapisz\" /></p>";
+	content += "<p></br><input type=\"submit\" value=\"Zapisz\" /></p>";
+	content += "<p></br><strong><a href=\"http://" + WiFi.localIP().toString() + "\">Powrót</a>";
 	content += "</form>";
 	content += "</html>";
 

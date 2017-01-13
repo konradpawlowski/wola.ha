@@ -32,13 +32,13 @@ void createWebServer()
 				  param.Temp1.Enable = 0;
 			  }
 
-			  if (server.hasArg("TEMP1_IsOutside"))
-				  param.Temp1.IsOutside = server.arg("TEMP1_IsOutside").toInt();
+			  if (server.hasArg("Temp1_IsOutside"))
+				  param.Temp1.IsOutside = 1;
 			  else
 				  param.Temp1.IsOutside = 0;
 
-			  if (server.hasArg("TEMP2_IsOutside"))
-				  param.Temp2.IsOutside = server.arg("TEMP2_IsOutside").toInt();
+			  if (server.hasArg("Temp2_IsOutside"))
+				  param.Temp2.IsOutside = 1;
 			  else
 				  param.Temp2.IsOutside = 0;
 
