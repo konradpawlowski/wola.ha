@@ -80,6 +80,7 @@ void createWebServer()
 		}
 	
 		server.send(statusCode, "text/html", content);
+		//Blink(2);
 	});
 
 	server.on("/temp", []() {
@@ -125,18 +126,12 @@ void createWebServer()
 		
 
 		server.send(statusCode, "text/html", content);
+		//Blink();
 	});
 
-	server.on("/temp2", []() {
+	server.on("/reset", []() {
 	
-		TParameters para = ReadSettings();
-		printTParameters(para);
-		for (int i = 0; i < 10; i++)
-		{
-
-			printValuesOnOff(settings.sens[i]);
-		}
-
+		ESP.restart();
 
 		content = ContentZapamietanoUstawienia();
 		statusCode = 200;

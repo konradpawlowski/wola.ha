@@ -2,9 +2,11 @@
 String ContentIndex() {
 	long mil = millis() / 1000;
 	String content;
-	content = "<!DOCTYPE HTML>\r\n<html>";
-	content += "<meta http-equiv=\"refresh\" content=\"10\">  ";
+	content = F("<!DOCTYPE HTML>\r\n<html>");
+	content += F("<meta http-equiv=\"refresh\" content=\"10\">  ");
+	content += F("</p><form method='get' action='saveTemp'>");
 	content += "<p align='right'>Czas od uruchomienia: " + time(mil) + "</p>";
+	content += "<p align='right'> pamięć: " + String(ESP.getFreeHeap()) + "</p>";
 	content += "<table align='center' border='1' cellpadding='1' cellspacing='1' style='width:300px;'>";
 	content += "	<caption>";
 	content += "	<h2>Czujniki</h2>";

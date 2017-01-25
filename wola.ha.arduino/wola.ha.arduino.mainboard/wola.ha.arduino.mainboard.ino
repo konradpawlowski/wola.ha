@@ -1,7 +1,7 @@
 ﻿#include <EEPROMVar.h>
 #include <EEPROMex.h>
 #include <DHT.h>
-#include "DallasTemperature.h"
+#include <DallasTemperature\DallasTemperature.h>
 #include <Wire.h>
 #include <OneWire.h>
 #include "wola.ha.enums.h"
@@ -10,7 +10,7 @@
 #define OneWirePin 8
 #define DhtPin 4
 #define TEMPERATURE_PRECISION 10
-#define I2cAddress 0x41
+#define I2cAddress 0x40
 
 
 

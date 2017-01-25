@@ -116,10 +116,12 @@
     <Compile Include="DataModel\SensorOnOffValue.cs" />
     <Compile Include="DataModel\SensorTemperatureValues.cs" />
     <Compile Include="DataModel\SensorType.cs" />
+    <Compile Include="Devices\BMP180\Bmp180Sensor.cs" />
     <Compile Include="Devices\I2c\I2CMessageFrame.cs" />
     <Compile Include="Devices\I2c\I2CResponseStatus.cs" />
     <Compile Include="Devices\Mcp23017\MCP23017.cs" />
     <Compile Include="Devices\I2c\I2COperation.cs" />
+    <Compile Include="Devices\PCF8591\PCF8591.cs" />
     <Compile Include="Enums\TempSensorEnum.cs" />
     <Compile Include="Devices\I2c\ArduinoI2CResponse.cs" />
     <Compile Include="Devices\I2c\I2CAddressException.cs" />

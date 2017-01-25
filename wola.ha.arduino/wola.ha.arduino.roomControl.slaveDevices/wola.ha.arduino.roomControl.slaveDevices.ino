@@ -72,16 +72,16 @@ void setup() {
 	Serial.println("connected...yeey :)");
 	settings = ReadSettings();
 	
-	if (settings.Temp1.Typ == Ds18b20)
+	/*if (settings.Temp1.Typ == Ds18b20)
 	{
 		
 		DallasTemperature sensorsTemp1(&oneWireTemp1);
 	}
 	if (settings.Temp1.Typ == Ds18b20)
 	{
-		OneWire oneWireTemp1(settings.Temp1.Pin);
-		DallasTemperature sensorsTemp1(&oneWireTemp1);
-	}
+		
+		DallasTemperature sensorsTemp2(&oneWireTemp2);
+	}*/
 
 
 

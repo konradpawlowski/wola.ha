@@ -125,12 +125,12 @@ TParameters loadStruct(int address = 0)
 
 
 void printValuesOnOff(TSensorsOnOffValue val) {
-	Serial.println("Values ON/OFF:");
-	Serial.print("Id:");
+	Serial.println(F("Values ON/OFF:"));
+	Serial.print(F("Id:"));
 	Serial.println(val.Id);
-	Serial.print("Temp:");
+	Serial.print(F("Temp:"));
 	Serial.println(val.Temp);
-	Serial.print("IsOutside:");
+	Serial.print(F("IsOutside:"));
 	Serial.println(val.IsOutside);
 }
 
@@ -140,40 +140,47 @@ void printTParameters(TParameters param) {
 	Serial.print("Address:");
 	Serial.println(param.ServerAddress);
 
-	Serial.println("Temp1:");
-	Serial.print("Enble:");
+	Serial.println(F("Temp1:"));
+	Serial.print(F("Enble:"));
 	Serial.println(param.Temp1.Enable);
-	Serial.print("Id:");
+	Serial.print(F("Id:"));
 	Serial.println(param.Temp1.Id);
-	Serial.print("Name:");
+	Serial.print(F("Name:"));
 	Serial.println(param.Temp1.Name);
 
-	Serial.print("Pin:");
+	Serial.print(F("Pin:"));
 	Serial.println(param.Temp1.Pin);
-	Serial.print("Typ:");
+	Serial.print(F("Typ:"));
 	Serial.println(param.Temp1.Typ);
 
-	Serial.print("IsOutside:");
+	Serial.print(F("IsOutside:"));
 	Serial.println(param.Temp1.IsOutside);
 
-	Serial.println("Temp2:");
-	Serial.print("Enble:");
+	Serial.println(F("Temp2:"));
+	Serial.print(F("Enble:"));
 	Serial.println(param.Temp2.Enable);
-	Serial.print("Id:");
+	Serial.print(F("Id:"));
 	Serial.println(param.Temp2.Id);
-	Serial.print("Name:");
+	Serial.print(F("Name:"));
 	Serial.println(param.Temp2.Name);
-	Serial.print("Pin:");
+	Serial.print(F("Pin:"));
 	Serial.println(param.Temp2.Pin);
-	Serial.print("Typ:");
+	Serial.print(F("Typ:"));
 	Serial.println(param.Temp2.Typ);
-	Serial.print("IsOutside:");
+	Serial.print(F("IsOutside:"));
 	Serial.println(param.Temp2.IsOutside);
 
-	Serial.print("Selected relay:");
+	Serial.print(F("Selected relay:"));
 	Serial.println(param.SelectedRelay);
 
-	Serial.print("Iloœæ czujników :");
+	Serial.print(F("Iloœæ czujników :"));
 	Serial.println(param.CountOfSensors);
 
+}
+void Blink(int ile = 3) {
+	for (int i = 0; i < ile; i++) {
+		digitalWrite(13, HIGH);
+		delay(100);
+		digitalWrite(13, LOW);
+	}
 }

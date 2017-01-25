@@ -1,7 +1,6 @@
 #pragma once
 typedef enum I2COperation
 {
-
 	Temp,
 	Read,
 	Write,

@@ -25,6 +25,7 @@
 
 #define TEMP1 14 
 #define TEMP2 16 
+//#define LED 13
 #define P1 4
 #define P2 5
 
@@ -38,6 +39,8 @@
 #define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
 #define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)  
 
+static int  IntervalTemp = 10000;
+static int IntervalRelay = 30000;
 
 //TSensorsOnOffValue ValuesOnOff[10]; // wartoœci progowa czujnika
 TParameters settings = { "" };
@@ -48,6 +51,11 @@ TRoomSensor Sensors[10] ; //wartoœci czujnikó
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
+unsigned long iStart = 0;
+unsigned long iTempStop = 0;
+unsigned long iRelayStop = 0;
+
+
 
 int i = 0;
 void setup() {
@@ -79,16 +87,16 @@ void setup() {
 	
 
 
-	if (settings.Temp1.Typ == Ds18b20)
-	{
+	//if (settings.Temp1.Typ == Ds18b20)
+	//{
 
-		DallasTemperature sensorsTemp1(&oneWireTemp1);
-	}
-	if (settings.Temp1.Typ == Ds18b20)
-	{
-		OneWire oneWireTemp1(settings.Temp1.Pin);
-		DallasTemperature sensorsTemp1(&oneWireTemp1);
-	}
+	//	DallasTemperature sensorsTemp1(&oneWireTemp1);
+	//}
+	//if (settings.Temp2.Typ == Ds18b20)
+	//{
+	//	//OneWire oneWireTemp2(&oneWireTemp2);
+	//	DallasTemperature sensorsTemp2(&oneWireTemp2);
+	//}
 
 
 
@@ -108,22 +116,31 @@ void setup() {
 	// Ustawienie GPIO przekaznika
 	pinMode(P1, OUTPUT);
 	pinMode(P2, OUTPUT);
+	digitalWrite(P1, LOW);
+	digitalWrite(P2, LOW);
+
 }
 
 void loop() {
-	i++;
+	iStart = millis();
 	server.handleClient();
 
-	if (i == 100) {
-		Serial.println("Temp:");
+	if (iStart - iTempStop >= IntervalTemp ) {
+		Serial.println(F("Temp:"));
 		GetTemp();
-		i = 0;
 		SetTempInServer(); 
-		SetRelay();
+		
+		iTempStop = millis();
 	}
+
+	if (iStart - iRelayStop >= IntervalRelay) {
+		Serial.println(F("Set relay"));
+		SetRelay();
+		iRelayStop = millis();
+	}
+	CheckMemory();
 	
 	
-	delay(100);
 }
 void SetTempInServer() {
 	char buff[100];
@@ -338,4 +355,8 @@ String printDigits(byte digits) {
 	val += String(digits);
 	Serial.print(digits, DEC);
 	return val;
+}
+void CheckMemory() {
+	if (ESP.getFreeHeap() < 5000)
+		ESP.restart();
 }
