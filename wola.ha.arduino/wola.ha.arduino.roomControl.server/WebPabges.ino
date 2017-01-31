@@ -5,10 +5,18 @@ String ContentIndex() {
 	content = F("<!DOCTYPE HTML>\r\n<html>");
 	content += F("<meta http-equiv=\"refresh\" content=\"10\">  ");
 	content += F("</p><form method='get' action='saveTemp'>");
+	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a></strong></p>";
 	content += "<p align='right'>Czas od uruchomienia: " + time(mil) + "</p>";
 	content += "<p align='right'> pamięć: " + String(ESP.getFreeHeap()) + "</p>";
+	content += F("</br>");
 
-	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a></strong></p>";
+
+	if(!digitalRead(settings.SelectedRelay))
+		content += F("<p>Stan pieca: <span style=\"color:#008000; \"><strong>PODTRZYMANIE</strong></span></p>");
+	else
+		content += F("<p>Stan pieca: <strong><span style=\"color:#FF0000; \">PRACA</span></strong></p>");
+
+	
 	content += F("<table align='center' border='1' cellpadding='1' cellspacing='1' style='width:600px;'>");
 	content += F("	<caption>");
 	content += F("	<h2>Czujniki</h2>");
@@ -26,13 +34,24 @@ String ContentIndex() {
 	char buffer[25];
 	for (int i = 0; i<settings.CountOfSensors; i++)
 	{
+		String color = CheckTempSensor(i) ? "red" : "green";
 		content += F("<tr>");
 		content += F("	<td align='center' valign='middle'>");
 		content += "		<a href=\"http://" + String(Sensors[i].Address) + "\">" + String(Sensors[i].Name) + "</a>";
 		content += F("	</td>");
-		content += F("	<td align='center' valign='middle'>");
+		
+		
+		content += F("	<td align='center' fb=\"white\" bgcolor=\"");
+		content += color;
+		
+		content += F("\"valign='middle'>");
+		content += F("<strong><span style=\"color:white; \"><span style=\"background - color:"); 
+		content += color+"; \">";
 		content += floatToString(buffer, Sensors[i].Temp, 2);
-		content += F("	</td>");
+		content += F("	</span></span></strong></td>");
+
+
+
 		content += F("	<td align='center' valign='middle'>");
 		content += F("<input id = '");
 		content += String(i);

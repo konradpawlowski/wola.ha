@@ -15,13 +15,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{2023
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduino.mainboard", "..\wola.ha.arduino\wola.ha.arduino.mainboard\wola.ha.arduino.mainboard.vcxproj", "{81F2DB74-DE83-4F0A-8321-A62711FB56D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.db", "wola.ha.db\wola.ha.db.csproj", "{5D9FB206-D53D-4C66-8B38-9C99723957F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.db", "..\wola.ha.db\wola.ha.db.csproj", "{5D9FB206-D53D-4C66-8B38-9C99723957F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorsTempReadController", "SensorsTempReadController\SensorsTempReadController.csproj", "{5FD66FF8-3842-4F5F-9625-781140533B22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorsTempReadController", "..\wola.ha.controllers\SensorsTempReadController\SensorsTempReadController.csproj", "{5FD66FF8-3842-4F5F-9625-781140533B22}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduino.roomControl.slaveDevices", "..\wola.ha.arduino\wola.ha.arduino.roomControl.slaveDevices\wola.ha.arduino.roomControl.slaveDevices.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduino.roomControl.server", "..\wola.ha.arduino\wola.ha.arduino.roomControl.server\wola.ha.arduino.roomControl.server.vcxproj", "{EED6C52C-2F78-49E8-B1DB-E1C23EBF9A4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "View", "View", "{F6F02C30-97B2-4A1A-BDCF-BBB2F135DCD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundTask", "BackgroundTask", "{D7BB47F4-8A85-4E47-84CC-9B0E8119D87C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.view.web", "..\wola.ha.view\wola.ha.view.web\wola.ha.view.web.csproj", "{320130D1-7543-4E37-9A36-21A4A9D85E52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestUpServerController", "..\wola.ha.controllers\RestUpServerController\RestUpServerController.csproj", "{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +125,42 @@ Global
 		{EED6C52C-2F78-49E8-B1DB-E1C23EBF9A4F}.Release|x64.ActiveCfg = Release|Win32
 		{EED6C52C-2F78-49E8-B1DB-E1C23EBF9A4F}.Release|x86.ActiveCfg = Release|Win32
 		{EED6C52C-2F78-49E8-B1DB-E1C23EBF9A4F}.Release|x86.Build.0 = Release|Win32
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|ARM.ActiveCfg = Debug|ARM
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|ARM.Build.0 = Debug|ARM
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|x64.ActiveCfg = Debug|x64
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|x64.Build.0 = Debug|x64
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|x86.ActiveCfg = Debug|x86
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Debug|x86.Build.0 = Debug|x86
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|ARM.ActiveCfg = Release|ARM
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|ARM.Build.0 = Release|ARM
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|x64.ActiveCfg = Release|x64
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|x64.Build.0 = Release|x64
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|x86.ActiveCfg = Release|x86
+		{320130D1-7543-4E37-9A36-21A4A9D85E52}.Release|x86.Build.0 = Release|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|ARM.Build.0 = Debug|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x64.ActiveCfg = Debug|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x64.Build.0 = Debug|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x64.Deploy.0 = Debug|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x86.ActiveCfg = Debug|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x86.Build.0 = Debug|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Debug|x86.Deploy.0 = Debug|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|Any CPU.ActiveCfg = Release|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|ARM.ActiveCfg = Release|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|ARM.Build.0 = Release|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|ARM.Deploy.0 = Release|ARM
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x64.ActiveCfg = Release|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x64.Build.0 = Release|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x64.Deploy.0 = Release|x64
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.ActiveCfg = Release|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.Build.0 = Release|x86
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,8 +169,11 @@ Global
 		{048E15D6-7241-4F51-92EF-058C6DF18BB3} = {8A28D9F9-25CF-4FC7-A16A-14F9E2458640}
 		{81F2DB74-DE83-4F0A-8321-A62711FB56D5} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
 		{5D9FB206-D53D-4C66-8B38-9C99723957F7} = {C08E8E98-5DAD-4495-9A3F-423AD742DDCE}
-		{5FD66FF8-3842-4F5F-9625-781140533B22} = {0CD692D4-6F75-4F97-835D-544A5FDD2FA1}
+		{5FD66FF8-3842-4F5F-9625-781140533B22} = {D7BB47F4-8A85-4E47-84CC-9B0E8119D87C}
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
 		{EED6C52C-2F78-49E8-B1DB-E1C23EBF9A4F} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
+		{D7BB47F4-8A85-4E47-84CC-9B0E8119D87C} = {0CD692D4-6F75-4F97-835D-544A5FDD2FA1}
+		{320130D1-7543-4E37-9A36-21A4A9D85E52} = {F6F02C30-97B2-4A1A-BDCF-BBB2F135DCD7}
+		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7} = {D7BB47F4-8A85-4E47-84CC-9B0E8119D87C}
 	EndGlobalSection
 EndGlobal

@@ -20,15 +20,6 @@
     <None Include="WebPabges.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libraries\DallasTemperature\DallasTemperature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\arduino-DHT-master\DHT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\OneWire\OneWire.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="floatToString.h">
       <Filter>Header Files</Filter>
     </ClInclude>

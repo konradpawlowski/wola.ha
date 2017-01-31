@@ -40,14 +40,14 @@
 #define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)  
 
 static int  IntervalTemp = 10000;
-static int IntervalRelay = 30000;
+static int IntervalRelay = 1000;
 
 //TSensorsOnOffValue ValuesOnOff[10]; // wartoœci progowa czujnika
 TParameters settings = { "" };
 TSensorValue Temp1Value;// = { 0,0 };
 TSensorValue Temp2Value;// = { 0,0 };
 
-TRoomSensor Sensors[10] ; //wartoœci czujnikó
+TRoomSensor Sensors[10]; //wartoœci czujnikó
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
@@ -83,8 +83,8 @@ void setup() {
 	//if you get here you have connected to the WiFi
 	Serial.println("connected...yeey :)");
 	settings = ReadSettings();
-	
-	
+
+
 
 
 	//if (settings.Temp1.Typ == Ds18b20)
@@ -125,11 +125,11 @@ void loop() {
 	iStart = millis();
 	server.handleClient();
 
-	if (iStart - iTempStop >= IntervalTemp ) {
+	if (iStart - iTempStop >= IntervalTemp) {
 		Serial.println(F("Temp:"));
 		GetTemp();
-		SetTempInServer(); 
-		
+		SetTempInServer();
+
 		iTempStop = millis();
 	}
 
@@ -139,23 +139,23 @@ void loop() {
 		iRelayStop = millis();
 	}
 	CheckMemory();
-	
-	
+
+
 }
 void SetTempInServer() {
 	char buff[100];
 	if (settings.Temp1.Enable) {
 		WiFi.localIP().toString().toCharArray(Sensors[settings.Temp1.Id].Address, 16);
-		String(settings.Temp1.Name).toCharArray(Sensors[settings.Temp1.Id].Name,20);
+		String(settings.Temp1.Name).toCharArray(Sensors[settings.Temp1.Id].Name, 20);
 		Sensors[settings.Temp1.Id].Temp = Temp1Value.Temp;
 		Sensors[settings.Temp1.Id].Time = millis();
-		
+
 
 	}
 
 	if (settings.Temp2.Enable) {
 		WiFi.localIP().toString().toCharArray(Sensors[settings.Temp2.Id].Address, 16);
-		String(settings.Temp2.Name).toCharArray(Sensors[settings.Temp2.Id].Name,20);
+		String(settings.Temp2.Name).toCharArray(Sensors[settings.Temp2.Id].Name, 20);
 		Sensors[settings.Temp2.Id].Temp = Temp2Value.Temp;
 		Sensors[settings.Temp2.Id].Time = millis();
 
@@ -288,10 +288,50 @@ TSensorValue readTempDht(int pin) {
 	}
 	return result;
 }
+byte CheckTempSensor(int i) {
+	byte val = LOW;
+
+	// sprawdzenie czasu nieaktywnosci czujnika
+	// jesli czas ==0 lub czas nieaktywanosci wynosi wiecej niz 10 min
+	if (Sensors[i].Time == 0 || ((millis() - Sensors[i].Time) / 1000) > 600)
+		val = LOW;
+	else {
+		if (Sensors[i].IsOutside) {
+			if (Sensors[i].Temp > settings.sens[i].Temp)
+				return LOW;
+			else
+				val = HIGH;
+		}
+		else
+		{
+			// jesli jest w³aczony piec
+			/*Serial.print(digitalRead(settings.SelectedRelay));
+			Serial.print(" temp z czujnika ");
+			Serial.print(Sensors[i].Temp);
+			Serial.print(" temp ustalona ");
+			Serial.println(settings.sens[i].Temp);*/
+			if (digitalRead(settings.SelectedRelay)) {
+				if (Sensors[i].Temp > settings.sens[i].Temp + 0.5)
+				{
+					val = LOW;
+					/*Serial.print(Sensors[i].Temp);
+					Serial.print(" > ");
+					Serial.println(settings.sens[i].Temp + 0.5);*/
+				}
+				else
+					val = HIGH;
+			}
+			else {
+				if (Sensors[i].Temp < settings.sens[i].Temp)
+					val = HIGH;
+			}
+		}
+	}
+	return val;
+}
 byte CheckTemp() {
 	byte val = LOW;
 	for (int i = 0; i < settings.CountOfSensors; i++) {
-
 		// sprawdzenie czasu nieaktywnosci czujnika
 		// jesli czas ==0 lub czas nieaktywanosci wynosi wiecej niz 10 min
 		if (Sensors[i].Time == 0 || ((millis() - Sensors[i].Time) / 1000) > 600)
@@ -300,12 +340,37 @@ byte CheckTemp() {
 			if (Sensors[i].IsOutside) {
 				if (Sensors[i].Temp > settings.sens[i].Temp)
 					return LOW;
-
-			}
+				}
 			else
 			{
-				if (Sensors[i].Temp < settings.sens[i].Temp)
-					val = HIGH;
+				// jesli jest w³aczony piec
+			/*	Serial.print(digitalRead(settings.SelectedRelay));
+				Serial.print(" temp z czujnika ");
+				Serial.print(Sensors[i].Temp);
+				Serial.print(" temp ustalona ");
+				Serial.println(settings.sens[i].Temp);*/
+
+				if (digitalRead(settings.SelectedRelay)) {
+
+				/*	Serial.print(Sensors[i].Temp > settings.sens[i].Temp + 0.5);
+					Serial.print(Sensors[i].Temp);
+					Serial.print(" < ");
+					Serial.println(settings.sens[i].Temp + 0.5);*/
+
+					if (Sensors[i].Temp < settings.sens[i].Temp + 0.5)
+						val = HIGH;
+				
+				}
+				else {
+					/*Serial.print(Sensors[i].Temp < settings.sens[i].Temp);
+					Serial.print(Sensors[i].Temp);
+					Serial.print(" < ");
+					Serial.println(settings.sens[i].Temp);*/
+					if (Sensors[i].Temp < settings.sens[i].Temp)
+						val = HIGH;
+
+
+				}
 			}
 		}
 	}
@@ -313,7 +378,7 @@ byte CheckTemp() {
 }
 void SetRelay() {
 	byte value = CheckTemp();
-	
+
 	switch (settings.SelectedRelay) {
 	case Relay1:
 		digitalWrite(P1, value);
@@ -321,7 +386,7 @@ void SetRelay() {
 	case Relay2:
 		digitalWrite(P2, value);
 		break;
-	
+
 	}
 	Serial.print("Przekaznik: ");
 	Serial.println(value);

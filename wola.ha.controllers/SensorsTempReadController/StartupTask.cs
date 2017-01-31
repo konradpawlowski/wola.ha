@@ -5,6 +5,8 @@ using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Restup.Webserver.Http;
+using Restup.Webserver.Rest;
 using wola.ha.common.DataModel;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
@@ -14,7 +16,8 @@ namespace SensorsTempReadController
     public sealed class StartupTask : IBackgroundTask
     {
         BackgroundTaskDeferral _defferal;
-        public void Run(IBackgroundTaskInstance taskInstance)
+
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
             // 
             // TODO: Insert code to perform background work
@@ -29,9 +32,11 @@ namespace SensorsTempReadController
             // sprawdzenie bazy danych
             LocalDb.CreateDatabase();
 
+          
 
 
         }
+
         private void TaskInstance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             //a few reasons that you may be interested in.
@@ -51,5 +56,4 @@ namespace SensorsTempReadController
             _defferal.Complete();
         }
     }
-
 }
