@@ -11,7 +11,7 @@ String ContentIndex() {
 	content += "	<caption>";
 	content += "	<h2>Czujniki</h2>";
 	content += "	</caption>";
-	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a>";
+	content += "<p><strong><a href=\"http://" + ipAddress + "/ustawienia\">Ustawienia</a>";
 	content += "</br><a href=\"http://" + String(settings.ServerAddress) + "\">Serwer</a>";
 	content += "</strong></p>";
 	content += "	<thead>";
@@ -67,12 +67,25 @@ String ContentZapamietanoUstawienia() {
 	content = "<!DOCTYPE HTML>\r\n<html>";
 	content += "<h2><strong>Zapamiętano ustawienia</strong></h2>";
 	content += "<p><strong>​<a href=\"http://";
-	content += WiFi.localIP().toString();
+	content += ipAddress;
 	content += "\">Powrót</a></strong></p>";
 	content += "</html>";
 
 	return content;
 }
+
+String ContentInfo(String message ) {
+	String content;
+	content = "<!DOCTYPE HTML>\r\n<html>";
+	content += "<h2><strong>"+message+"</strong></h2>";
+	content += "<p><strong>​<a href=\"http://";
+	content += ipAddress;
+	content += "\">Powrót</a></strong></p>";
+	content += "</html>";
+
+	return content;
+}
+
 String ContentUstawienia() {
 	String content = "<!DOCTYPE HTML>\r\n<html>";
 	content += "</p><form method='get' action='setting'>";
@@ -81,6 +94,7 @@ String ContentUstawienia() {
 	content += "";
 	content += "<h3><strong>Konfiguracja czujnik&oacute;w </strong></h3>";
 	content += "";
+	content += "<p>Moje IP: " + ipAddress + "</p>";
 	content += "<table align=\"left\" border=\"2\" cellpadding=\"2\" cellspacing=\"2\" dir=\"ltr\" style=\"width:200px;\">";
 	content += "	<caption><strong>Czujnik 1</strong></caption>";
 	content += "	<tbody>";
@@ -174,7 +188,7 @@ String ContentUstawienia() {
 	content += "<p>&nbsp;</p>";
 	content += "";
 	content += "<p></br><input type=\"submit\" value=\"Zapisz\" /></p>";
-	content += "<p></br><strong><a href=\"http://" + WiFi.localIP().toString() + "\">Powrót</a>";
+	content += "<p></br><strong><a href=\"http://" + ipAddress + "\">Powrót</a>";
 	content += "</strong></p>";
 	content += "</form>";
 	content += "</html>";

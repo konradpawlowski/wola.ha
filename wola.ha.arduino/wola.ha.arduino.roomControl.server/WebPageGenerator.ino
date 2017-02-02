@@ -64,6 +64,20 @@ void createWebServer()
 
 			  if (server.hasArg("CountSensors"))
 				  param.CountOfSensors = server.arg("CountSensors").toInt();
+
+
+			  if (server.hasArg("IsWifiAp"))
+			  {
+				  param.Wifi.IsWifiAp = 1;
+				  server.arg("WifiSSID").toCharArray(param.Wifi.Ssid, 20);
+				  server.arg("WifiHPass").toCharArray(param.Wifi.Pass, 20);
+			  }
+			  else
+			  {
+				  param.Wifi.IsWifiAp = 0;
+				  server.arg("WifiSSID").toCharArray("", 20);
+				  server.arg("WifiHPass").toCharArray("", 20);
+			  }
 			  printTParameters(param);
 			  SaveSettings(param);
 
@@ -134,6 +148,15 @@ void createWebServer()
 		ESP.restart();
 
 		content = ContentZapamietanoUstawienia();
+		statusCode = 200;
+		server.send(statusCode, "text/html", content);
+	});
+	server.on("/clear", []() {
+		WiFiManager wifiManager;
+		wifiManager.resetSettings();
+		ClearEeprom();
+
+		content = ContentInfo("Wyczyszczono dane i ustawienia wifi");
 		statusCode = 200;
 		server.send(statusCode, "text/html", content);
 	});

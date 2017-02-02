@@ -5,7 +5,7 @@ String ContentIndex() {
 	content = F("<!DOCTYPE HTML>\r\n<html>");
 	content += F("<meta http-equiv=\"refresh\" content=\"10\">  ");
 	content += F("</p><form method='get' action='saveTemp'>");
-	content += "<p><strong><a href=\"http://" + WiFi.localIP().toString() + "/ustawienia\">Ustawienia</a></strong></p>";
+	content += "<p><strong><a href=\"http://" + ipAddress + "/ustawienia\">Ustawienia</a></strong></p>";
 	content += "<p align='right'>Czas od uruchomienia: " + time(mil) + "</p>";
 	content += "<p align='right'> pamięć: " + String(ESP.getFreeHeap()) + "</p>";
 	content += F("</br>");
@@ -87,16 +87,31 @@ String ContentZapamietanoUstawienia() {
 	content = F("<!DOCTYPE HTML>\r\n<html>");
 	content += F("<h2><strong>Zapamiętano ustawienia</strong></h2>");
 	content += F("<p><strong>​<a href=\"http://");
-	content += WiFi.localIP().toString();
+	content += ipAddress;
 	content += F("\">Powrót</a></strong></p>");
 	content += F("</html>");
 
 	return content;
 }
+String ContentInfo(String message) {
+	String content;
+	content = "<!DOCTYPE HTML>\r\n<html>";
+	content += "<h2><strong>" + message + "</strong></h2>";
+	content += "<p><strong>​<a href=\"http://";
+	content += ipAddress;
+	content += "\">Powrót</a></strong></p>";
+	content += "</html>";
+
+	return content;
+}
 String ContentUstawienia() {
 	String content = F("<!DOCTYPE HTML>\r\n<html>");
+	content += F("<div class=\"wifi\" style=\"background:#eee; border:1px solid #ccc; padding:5px 10px; \">");
+	content += "<p>Moje IP: " + ipAddress + "</p>";
+	content += F("</div>");
 	content += F("</p><form method='get' action='setting'>");
 	content += F("<h3><strong>Adres serwera:&nbsp;<input maxlength=\"16\" name=\"ServerAddress\" size=\"16\" type=\"text\" value=\"_SERVER_ADDRESS_\" />​</strong></h3>");
+	
 	content += F("<p><h3>Ilość czujników: <select name='CountSensors' size='1'>");
 	for (int i = 0; i < 10; i++) {
 		content += F("<option ");
@@ -204,9 +219,25 @@ String ContentUstawienia() {
 	content += F("<p>&nbsp;</p>");
 	content += F("<p>&nbsp;</p>");
 	content += F("<p>&nbsp;</p>");
-	
+	content += F("</br>");
+	content += F("<div class=\"wifi\" style=\"background:#eee; border:1px solid #ccc; padding:5px 10px; \">");
+	content += F("<p><strong>Czy włączyć tryb AP dla sieci WiFi :&nbsp;</strong><input name=\"IsWifiAp\" type=\"checkbox\" ");
+	if (settings.Wifi.IsWifiAp )
+		content += F("checked");
+	content += F("/></p>");
+	content += F("<p><strong>SSID: &nbsp; </strong><input maxlength=\"20\" name=\"WifiSSID\" size=\"20\" type=\"text\" value=\""); 
+		content += String(settings.Wifi.Ssid);
+	content += F( "\"/>&nbsp;</p>");
+	content += F("<p><strong>Hasło:&nbsp;</strong><input maxlength=\"20\" name=\"WifiHPass\" size=\"20\" type=\"password\" value=\""); 
+		content += String(settings.Wifi.Pass) ;
+	content += F("\"/>​</p></div>");
+
+
+
+
+
 	content += F("<p></br><input type=\"submit\" value=\"Zapisz\" /></p>");
-	content += "<p></br><strong><a href=\"http://" + WiFi.localIP().toString() + "\">Powrót</a>";
+	content += "<p></br><strong><a href=\"http://" + ipAddress + "\">Powrót</a>";
 	content += F("</form>");
 	content += F("</html>");
 

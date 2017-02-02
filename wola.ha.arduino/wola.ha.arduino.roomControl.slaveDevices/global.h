@@ -17,13 +17,20 @@ typedef struct TempDefinition {
 	int IsOutside;
 } TTempDefinition;
 
+typedef struct WifiSettings {
+	int IsWifiAp;
+	char Ssid[20];
+	char Pass[20];
+
+} TWifiSettings;
 typedef struct Parameters{
   char ServerAddress[16];
   
   TTempDefinition Temp1;
   TTempDefinition Temp2;
-  
+  TWifiSettings Wifi;
 }TParameters;
+
 
 typedef struct SensorValue {
 	int Id;
@@ -117,4 +124,19 @@ void printTParameters(TParameters param) {
 	Serial.print("Typ:");
 	Serial.println(param.Temp2.Typ);
 
+}
+void ClearEeprom() {
+	TParameters param;
+	int size = sizeof(TParameters);
+	byte data[sizeof(TParameters)];
+	EEPROM.begin(size);
+	for (int i = 0; i < size; i++)
+	{
+		byte data1 = 0;
+		((byte *)data)[i] = data1;
+	}
+
+	memcpy(&param, data, size);
+
+	SaveSettings(param);
 }

@@ -14,6 +14,23 @@ void createWebServer()
 
 		server.send(200, "text/html", content);
 	});
+	server.on("/clear", []() {
+		WiFiManager wifiManager;
+		wifiManager.resetSettings();
+		ClearEeprom();
+
+		content = ContentInfo("Wyczyszczono dane i ustawienia wifi");
+		statusCode = 200;
+		server.send(statusCode, "text/html", content);
+	});
+	server.on("/reset", []() {
+
+		ESP.restart();
+
+		content = ContentZapamietanoUstawienia();
+		statusCode = 200;
+		server.send(statusCode, "text/html", content);
+	});
 	server.on("/setting", []() {
 		
 		TParameters param;

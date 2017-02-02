@@ -39,50 +39,41 @@
 TParameters settings = { "" };
 TSensorValue Temp1Value;// = { 0,0 };
 TSensorValue Temp2Value;// = { 0,0 };
+String ipAddress;
 
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
 
 int i = 0;
 void setup() {
-	Serial.println("Clear eeprom");
-	//ClearEeprom();
 	// put your setup code here, to run once:
 	Serial.begin(115200);
-	//EEPROM.begin(MEMORY_SIZE);
-	//WiFiManager
-	//Local intialization. Once its business is done, there is no need to keep it around
-	WiFiManager wifiManager;
-	//reset saved settings
-	//  wifiManager.resetSettings();
-
-	//set custom ip for portal
-	//   wifiManager.setAPConfig(IPAddress(10,0,1,1), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
-
-	//fetches ssid and pass from eeprom and tries to connect
-	//if it does not connect it starts an access point with the specified name
-	//here  "AutoConnectAP"
-	//and goes into a blocking loop awaiting configuration
-	wifiManager.autoConnect("AutoConnectAP");
-	//or use this for auto generated name ESP + ChipID
-	//wifiManager.autoConnect();
-
-
-	//if you get here you have connected to the WiFi
-	Serial.println("connected...yeey :)");
+	EEPROM.begin(512);
 	settings = ReadSettings();
-	
-	/*if (settings.Temp1.Typ == Ds18b20)
-	{
-		
-		DallasTemperature sensorsTemp1(&oneWireTemp1);
-	}
-	if (settings.Temp1.Typ == Ds18b20)
-	{
-		
-		DallasTemperature sensorsTemp2(&oneWireTemp2);
-	}*/
 
+
+	if (settings.Wifi.IsWifiAp) {
+		Serial.print("Tworze wifi");
+
+		if (WiFi.softAP(settings.Wifi.Ssid, settings.Wifi.Pass))
+		{
+			IPAddress myIP = WiFi.softAPIP();
+			Serial.println("... " + myIP.toString());
+			ipAddress = myIP.toString();
+		}
+		else
+			Serial.println("... nie utworzono");
+	}
+	else {
+		WiFiManager wifiManager;
+		//WiFiManager
+		//Local intialization. Once its business is done, there is no need to keep it around
+		//use this for auto generated name ESP + ChipID
+		wifiManager.autoConnect();
+		//if you get here you have connected to the WiFi
+		Serial.println("connected...yeey :)");
+		ipAddress = ipAddress = WiFi.localIP().toString();
+	}
 
 
 	createWebServer();
@@ -91,7 +82,7 @@ void setup() {
 	Serial.println("Server started");
 
 	// Print the IP address
-	Serial.println(WiFi.localIP());
+	Serial.println(ipAddress);
 
 	Serial.print("reading settings");
 	//settings = ReadSettings();
@@ -283,7 +274,7 @@ void SendTemp(TSensorValue val) {
 	String address = "/temp?Id=" + String(val.Id);
 	address += "&Name=" + val.Name;
 	address += "&Temperatura="+ String(val.Temp);
-	address += "&ipAddress=" + WiFi.localIP().toString();
+	address += "&ipAddress=" + ipAddress;
 	address += "&IsOutside=" + String(val.IsOutside);
 	
 	Serial.print("connecting to ");
@@ -324,11 +315,7 @@ void SendTemp(TSensorValue val) {
 
 
 }
-void ClearEeprom() {
-	for (int i = 0; i < 1024; i++) {
-		EEPROM.write(i, 0);
-	}
-}
+
 String time(long val) {
 	String ret = "";
 	int days = elapsedDays(val);
