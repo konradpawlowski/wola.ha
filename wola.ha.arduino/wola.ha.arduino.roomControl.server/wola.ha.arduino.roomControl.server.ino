@@ -60,6 +60,7 @@ String ipAddress;
 int i = 0;
 void setup() {
 	// put your setup code here, to run once:
+	//ClearEeprom();
 	Serial.begin(115200);
 	EEPROM.begin(512);
 	settings = ReadSettings();

@@ -25,7 +25,6 @@ typedef struct WifiSettings {
 } TWifiSettings;
 typedef struct Parameters{
   char ServerAddress[16];
-  
   TTempDefinition Temp1;
   TTempDefinition Temp2;
   TWifiSettings Wifi;
@@ -53,45 +52,6 @@ enum TempSensorTypeEnum
 	Ds18b20
 
 };
-
-
-void storeStruct(void *data_source, int size)
-{
-
-	EEPROM.begin(size);
-	//	Serial.print("Zapis");
-	for (int i = 0; i < size; i++)
-	{
-
-		byte data = ((byte *)data_source)[i];
-
-		//	Serial.print(data);
-		EEPROM.write(i, data);
-
-	}
-	EEPROM.commit();
-	//	Serial.println("Koniec - Zapis");
-}
-
-TParameters loadStruct()
-{
-	TParameters para;
-	int size = sizeof(TParameters);
-	byte data[sizeof(TParameters)];
-	EEPROM.begin(size);
-	for (int i = 0; i < size; i++)
-	{
-
-		byte data1 = EEPROM.read(i);
-		//Serial.println(data1);
-		((byte *)data)[i] = data1;
-	}
-	//Serial.println((char*)data);
-	memcpy(&para, data, size);
-
-	return para;
-
-}
 
 void printTParameters(TParameters param) {
 
@@ -124,6 +84,83 @@ void printTParameters(TParameters param) {
 	Serial.print("Typ:");
 	Serial.println(param.Temp2.Typ);
 
+	Serial.println(F("Ustawienia acesspoint:"));
+	Serial.print("Access point is " + param.Wifi.IsWifiAp ? "Enable" : "Disable");
+	Serial.print(F("SSID: "));
+	Serial.print(param.Wifi.Ssid);
+	Serial.print(F(" \t \t Pass:"));
+	Serial.println(param.Wifi.Pass);
+}
+
+
+void storeStruct(void *data_source, int size)
+{
+
+	EEPROM.begin(size);
+	//	Serial.print("Zapis");
+	for (int i = 0; i < size; i++)
+	{
+
+		byte data = ((byte *)data_source)[i];
+
+		//	Serial.print(data);
+		EEPROM.write(i, data);
+
+	}
+	EEPROM.commit();
+	//	Serial.println("Koniec - Zapis");
+}
+TParameters loadStruct()
+{
+	TParameters para;
+	int size = sizeof(TParameters);
+	byte data[sizeof(TParameters)];
+	EEPROM.begin(size);
+	for (int i = 0; i < size; i++)
+	{
+
+		byte data1 = EEPROM.read(i);
+		//Serial.println(data1);
+		((byte *)data)[i] = data1;
+	}
+	//Serial.println((char*)data);
+	memcpy(&para, data, size);
+
+	return para;
+
+}
+void SaveSettings(TParameters param) {
+	storeStruct(&param, sizeof(param));
+	//EEPROM_writeAnything(0, param);
+	Serial.println("Zapis");
+	printTParameters(param);
+}
+TParameters ReadSettings() {
+
+	TParameters param;
+
+	param = loadStruct();
+	//EEPROM_readAnything(0, param);
+	Serial.println("Odczyt");
+	printTParameters(param);
+	
+	return param;
+}
+
+
+
+String printDigits(byte digits) {
+	String val = ":";
+	// utility function for digital clock display: prints colon and leading 0
+	Serial.print(":");
+	if (digits < 10)
+	{
+		Serial.print('0');
+		val += "0";
+	}
+	val += String(digits);
+	Serial.print(digits, DEC);
+	return val;
 }
 void ClearEeprom() {
 	TParameters param;

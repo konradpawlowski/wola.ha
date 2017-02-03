@@ -41,6 +41,16 @@ TSensorValue Temp1Value;// = { 0,0 };
 TSensorValue Temp2Value;// = { 0,0 };
 String ipAddress;
 
+static int  IntervalTemp = 5000;
+static int IntervalSend = 10000;
+
+unsigned long iStart = 0;
+unsigned long iTempStop = 0;
+
+unsigned long iSendStop = 0;
+
+
+
 OneWire oneWireTemp1(TEMP1);
 OneWire oneWireTemp2(TEMP2);
 
@@ -91,23 +101,24 @@ void setup() {
 }
 
 void loop() {
-	i++;
+	iStart = millis();
 	server.handleClient();
 
-	if (i % 100 == 0) {
-		Serial.println("Temp:");
+	if (iStart - iTempStop >= IntervalTemp) {
+		Serial.println(F("Temp:"));
 		GetTemp();
-		i = 0;
+		iTempStop = millis();
 	}
-	if (i % 300 == 0) {
+
+	if (iStart - iSendStop >= IntervalSend) {
 		if (settings.Temp1.Enable)
 			SendTemp(Temp1Value);
 		if (settings.Temp2.Enable)
 			SendTemp(Temp2Value);
+		iSendStop = millis();
 	}
+	CheckMemory();
 
-	//Serial.println(millis());
-	delay(100);
 }
 
 void GetTemp() {
@@ -143,45 +154,6 @@ void GetTemp() {
 		Temp2Value.IsOutside = settings.Temp2.IsOutside;
 	}
 }
-
-
-
-String GetOpctionSite() {
-
-	// Prepare the response
-	String s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\n";
-
-	s += "\r\n";
-	s += " <h1>Ustawienia</h1> ";
-	s += "<p><strong>Nazwa</strong>: <input name=\"name\" type=\"text\" />&nbsp;</p> ";
-	s += "<p><strong>Identyfikator</strong>: <input name=\"id\" type=\"text\" />&nbsp;</p> ";
-	s += "<input type='submit' value='Zapisz'>";
-	s += "\r\n";
-	s += "</html>\n";
-
-	return s;
-}
-
-void SaveSettings(TParameters param) {
-	storeStruct(&param, sizeof(param));
-	//EEPROM_writeAnything(0, param);
-	Serial.println("Zapis");
-	printTParameters(param);
-}
-
-TParameters ReadSettings() {
-
-	TParameters param;
-
-	param = loadStruct();
-	//EEPROM_readAnything(0, param);
-	Serial.println("Odczyt");
-	printTParameters(param);
-	
-	return param;
-}
-
-
 float GetTempDs18b20(TempSensorEnum temp) {
 	DallasTemperature sensors;
 
@@ -237,7 +209,6 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	Serial.println("\n\n\n\n");
 	return sensors.getTempCByIndex(0);
 }
-
 SensorValue readTempDht(int pin) {
 	SensorValue result;
 
@@ -315,7 +286,6 @@ void SendTemp(TSensorValue val) {
 
 
 }
-
 String time(long val) {
 	String ret = "";
 	int days = elapsedDays(val);
@@ -330,19 +300,11 @@ String time(long val) {
 	ret += printDigits(minutes);
 	ret += printDigits(seconds);
 	Serial.println();
-	
+
 	return ret;
 }
-String printDigits(byte digits) {
-	String val=":";
-	// utility function for digital clock display: prints colon and leading 0
-	Serial.print(":");
-	if (digits < 10)
-	{
-		Serial.print('0');
-		val += "0";
-	}
-	val += String(digits);
-	Serial.print(digits, DEC);
-	return val;
+void CheckMemory() {
+	if (ESP.getFreeHeap() < 5000)
+		ESP.restart();
 }
+

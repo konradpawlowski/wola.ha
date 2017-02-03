@@ -87,111 +87,120 @@ String ContentInfo(String message ) {
 }
 
 String ContentUstawienia() {
-	String content = "<!DOCTYPE HTML>\r\n<html>";
-	content += "</p><form method='get' action='setting'>";
-	content += "<h3><strong>Adres serwera:&nbsp;<input maxlength=\"16\" name=\"ServerAddress\" size=\"16\" type=\"text\" value=\"_SERVER_ADDRESS_\" />​</strong></h3>";
-	
-	content += "";
-	content += "<h3><strong>Konfiguracja czujnik&oacute;w </strong></h3>";
-	content += "";
+	String content = F("<!DOCTYPE HTML>\r\n<html>");
+	content += F("<div class=\"wifi\" style=\"background:#eee; border:1px solid #ccc; padding:5px 10px; \">");
 	content += "<p>Moje IP: " + ipAddress + "</p>";
-	content += "<table align=\"left\" border=\"2\" cellpadding=\"2\" cellspacing=\"2\" dir=\"ltr\" style=\"width:200px;\">";
-	content += "	<caption><strong>Czujnik 1</strong></caption>";
-	content += "	<tbody>";
-	content += "		<tr>";
-	content += "			<td><span style=\"display: none;\">&nbsp;</span><b>Aktywny:</b></td>";
-	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_Enable\" type=\"checkbox\" ";
+	content += F("</div>");
+	content += F("</p><form method='get' action='setting'>");
+	content += F("<h3><strong>Adres serwera:&nbsp;<input maxlength=\"16\" name=\"ServerAddress\" size=\"16\" type=\"text\" value=\"_SERVER_ADDRESS_\" />​</strong></h3>");
+
+	
+
+	content += F("<h3><strong>Konfiguracja czujnik&oacute;w </strong></h3>");
+
+	content += F("<table align=\"left\" border=\"2\" cellpadding=\"2\" cellspacing=\"2\" dir=\"ltr\" style=\"width:200px;\">");
+	content += F("	<caption><strong>Czujnik 1</strong></caption>");
+	content += F("	<tbody>");
+	content += F("		<tr>");
+	content += F("			<td><span style=\"display: none;\">&nbsp;</span><b>Aktywny:</b></td>");
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_Enable\" type=\"checkbox\" ");
 	if (settings.Temp1.Enable == 1)
-		content += "checked";
-	content += "/>​</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Id:</strong></td>";
-	content += "			<td><input maxlength=\"4\" name=\"Temp1_Id\" size=\"4\" type=\"text\" value=\"_TEMP1_ID_\" /> &nbsp;</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Nazwa:</strong>&nbsp;</td>";
-	content += "			<td><br />";
-	content += "			<input maxlength=\"20\" name=\"Temp1_Name\" size=\"20\" type=\"text\" value=\"_TEMP1_NAME_\" /><br />";
-	content += "			&nbsp;</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Typ czujnika</strong></td>";
-	content += "			<td><br />";
-	content += "			&nbsp;<select name=\"Temp1_Type\" size=\"2\"><option _TEMP1_TYPE1_ value=\"1\">DS18B20</option><option _TEMP1_TYPE0_ value=\"0\">DHT</option></select></td>";
-	content += "		</tr>";
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Id:</strong></td>");
+	content += F("			<td><input maxlength=\"4\" name=\"Temp1_Id\" size=\"4\" type=\"text\" value=\"_TEMP1_ID_\" /> &nbsp;</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Nazwa:</strong>&nbsp;</td>");
+	content += F("			<td><br />");
+	content += F("			<input maxlength=\"20\" name=\"Temp1_Name\" size=\"20\" type=\"text\" value=\"_TEMP1_NAME_\" /><br />");
+	content += F("			&nbsp;</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Typ czujnika</strong></td>");
+	content += F("			<td><br />");
+	content += F("			&nbsp;<select name=\"Temp1_Type\" size=\"2\"><option _TEMP1_TYPE1_ value=\"1\">DS18B20</option><option _TEMP1_TYPE0_ value=\"0\">DHT</option></select></td>");
+	content += F("		</tr>");
 
-	content += "		<tr>";
-	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
-	content += "			<td><br />";
-	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_IsOutside\" type=\"checkbox\" ";
+	content += F("		<tr>");
+	content += F("			<td><strong>Czujnik zewnętrzny</strong></td>");
+
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_IsOutside\" type=\"checkbox\" ");
 	if (settings.Temp1.IsOutside == 1)
-		content += "checked";
-	content += "/>​</td>";
-	content += "		</tr>";
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
 
+	content += F("	</tbody>");
+	content += F("</table>");
 
-	content += "	</tbody>";
-	content += "</table>";
-	content += "";
-	content += "<table align=\"left\" border=\"2\" cellpadding=\"2\" cellspacing=\"2\" dir=\"ltr\" style=\"width:200px;\">";
-	content += "	<caption><strong>Czujnik 2 </strong></caption>";
-	content += "	<tbody>";
-	content += "		<tr>";
-	content += "			<td><span style=\"display: none;\">&nbsp;</span><b>Aktywny:</b></td>";
-	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_Enable\" type=\"checkbox\" ";
+	content += F("<table align=\"left\" border=\"2\" cellpadding=\"2\" cellspacing=\"2\" dir=\"ltr\" style=\"width:200px;\">");
+	content += F("	<caption><strong>Czujnik 2 </strong></caption>");
+	content += F("	<tbody>");
+	content += F("		<tr>");
+	content += F("			<td><span style=\"display: none;\">&nbsp;</span><b>Aktywny:</b></td>");
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_Enable\" type=\"checkbox\" ");
 	if (settings.Temp2.Enable == 1)
-		content += "checked";
-	content += "/>​</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Id:</strong></td>";
-	content += "			<td><input maxlength=\"4\" name=\"Temp2_Id\" size=\"4\" type=\"text\" value=\"_TEMP2_ID_\" /> &nbsp;</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Nazwa:</strong>&nbsp;</td>";
-	content += "			<td><br />";
-	content += "			<input maxlength=\"20\" name=\"Temp2_Name\" size=\"20\" type=\"text\" value=\"_TEMP2_NAME_\" /><br />";
-	content += "			&nbsp;</td>";
-	content += "		</tr>";
-	content += "		<tr>";
-	content += "			<td><strong>Typ czujnika</strong></td>";
-	content += "			<td><br />";
-	content += "			&nbsp;<select name=\"Temp2_Type\" size=\"2\"><option _TEMP2_TYPE1_ value=\"1\">DS18B20</option><option _TEMP2_TYPE0_ value=\"0\">DHT</option></select></td>";
-	content += "		</tr>";
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Id:</strong></td>");
+	content += F("			<td><input maxlength=\"4\" name=\"Temp2_Id\" size=\"4\" type=\"text\" value=\"_TEMP2_ID_\" /> &nbsp;</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Nazwa:</strong>&nbsp;</td>");
+	content += F("			<td><br />");
+	content += F("			<input maxlength=\"20\" name=\"Temp2_Name\" size=\"20\" type=\"text\" value=\"_TEMP2_NAME_\" /><br />");
+	content += F("			&nbsp;</td>");
+	content += F("		</tr>");
+	content += F("		<tr>");
+	content += F("			<td><strong>Typ czujnika</strong></td>");
+	content += F("			<td><br />");
+	content += F("			&nbsp;<select name=\"Temp2_Type\" size=\"2\"><option _TEMP2_TYPE1_ value=\"1\">DS18B20</option><option _TEMP2_TYPE0_ value=\"0\">DHT</option></select></td>");
+	content += F("		</tr>");
 
-	content += "		<tr>";
-	content += "			<td><strong>Czujnik zewnętrzny</strong></td>";
-	content += "			<td><br />";
-	content += "			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_IsOutside\" type=\"checkbox\" ";
+	content += F("		<tr>");
+	content += F("			<td><strong>Czujnik zewnętrzny</strong></td>");
+
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_IsOutside\" type=\"checkbox\" ");
 	if (settings.Temp2.IsOutside == 1)
-		content += "checked";
-	content += "/>​</td>";
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
+
+	content += F("	</tbody>");
+	content += F("</table>");
+	content += F("<p>​​</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("<p>&nbsp;</p>");
+	content += F("</br>");
+	content += F("<div class=\"wifi\" style=\"background:#eee; border:1px solid #ccc; padding:5px 10px; \">");
+	content += F("<p><strong>Czy włączyć tryb AP dla sieci WiFi :&nbsp;</strong><input name=\"IsWifiAp\" type=\"checkbox\" ");
+	if (settings.Wifi.IsWifiAp)
+		content += F("checked");
+	content += F("/></p>");
+	content += F("<p><strong>SSID: &nbsp; </strong><input maxlength=\"20\" name=\"WifiSSID\" size=\"20\" type=\"text\" value=\"");
+	content += String(settings.Wifi.Ssid);
+	content += F("\"/>&nbsp;</p>");
+	content += F("<p><strong>Hasło:&nbsp;</strong><input maxlength=\"20\" name=\"WifiHPass\" size=\"20\" type=\"password\" value=\"");
+	content += String(settings.Wifi.Pass);
+	content += F("\"/>​</p></div>");
 
 
-	content += "		</tr>";
-	content += "	</tbody>";
-	content += "</table>";
-	content += "";
-	content += "<p>​​</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p>&nbsp;</p>";
-	content += "";
-	content += "<p></br><input type=\"submit\" value=\"Zapisz\" /></p>";
+
+
+
+	content += F("<p></br><input type=\"submit\" value=\"Zapisz\" /></p>");
 	content += "<p></br><strong><a href=\"http://" + ipAddress + "\">Powrót</a>";
-	content += "</strong></p>";
-	content += "</form>";
-	content += "</html>";
+	content += F("</form>");
+	content += F("</html>");
 
 	content.replace("_SERVER_ADDRESS_", settings.ServerAddress);
 	content.replace("_TEMP1_ID_", String(settings.Temp1.Id));
