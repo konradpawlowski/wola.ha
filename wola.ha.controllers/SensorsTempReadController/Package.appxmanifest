@@ -23,6 +23,8 @@
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="SensorsTempReadController.StartupTask">
           <BackgroundTasks>
+            <Task Type="systemEvent" />
+            <Task Type="timer" />
             <iot:Task Type="startup" />
           </BackgroundTasks>
         </Extension>
@@ -33,5 +35,7 @@
     <Capability Name="internetClient" />
     <Capability Name="internetClientServer" />
     <Capability Name="privateNetworkClientServer" />
+    <uap:Capability Name="removableStorage" />
+    <uap:Capability Name="userAccountInformation" />
   </Capabilities>
 </Package>

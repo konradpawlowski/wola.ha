@@ -14,12 +14,13 @@ namespace wola.ha.common.DataModel
 {
     public class LocalDb
     {
+        
         private const string DbName = "wola.ha.db.sqlite";
         private static readonly string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, DbName);
       //  private static readonly string DbPath = Path.Combine(@"C:\temp\", DbName);
         private static SQLiteConnection DbConnection => new SQLiteConnection(new SQLitePlatformWinRT(), DbPath);
 
-        public static void CreateDatabase()
+        public async static void CreateDatabase()
         {
 
           //  if(!CheckDbAsync())

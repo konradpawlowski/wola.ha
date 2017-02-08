@@ -96,6 +96,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\SensorsValuesController.cs" />
+    <Compile Include="Model\SensorValueDataContent.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -130,11 +132,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\wola.ha.common\wola.ha.common\wola.ha.common.csproj">
+      <Project>{048E15D6-7241-4F51-92EF-058C6DF18BB3}</Project>
+      <Name>wola.ha.common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\wola.ha.view\wola.ha.view.web\wola.ha.view.web.csproj">
       <Project>{320130d1-7543-4e37-9a36-21a4a9d85e52}</Project>
       <Name>wola.ha.view.web</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

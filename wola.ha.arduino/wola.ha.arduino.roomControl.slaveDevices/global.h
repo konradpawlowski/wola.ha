@@ -15,6 +15,7 @@ typedef struct TempDefinition {
 	char Name[20];
 	int Id;
 	int IsOutside;
+	int IsInBox; // jesli jest w obudowie to odejmujemy od wyniku 2,9 stopnia C
 } TTempDefinition;
 
 typedef struct WifiSettings {

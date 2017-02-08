@@ -156,18 +156,29 @@ void GetTemp() {
 }
 float GetTempDs18b20(TempSensorEnum temp) {
 	DallasTemperature sensors;
-
+	float ret=0;
 	switch (temp)
 	{
 	case Temp1:
 		sensors.setOneWire(&oneWireTemp1);
+		Serial.println(settings.Temp1.IsInBox);
+		if (settings.Temp1.IsInBox) {
+			
+			ret -= 2.9;
+			Serial.print(ret);
+		}
+			
 		break;
 	case Temp2:
 		sensors.setOneWire(&oneWireTemp2);
+		if (settings.Temp2.IsInBox)
+		{
+			ret -= 2.9;
+		}
 		break;
-	
+
 	}
-	
+
 	// Request temperature conversion (traditional)
 	Serial.println("Before blocking requestForConversion");
 	unsigned long start = millis();
@@ -207,7 +218,12 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	Serial.print("Temperature: ");
 	Serial.println(sensors.getTempCByIndex(0));
 	Serial.println("\n\n\n\n");
-	return sensors.getTempCByIndex(0);
+	
+	ret += sensors.getTempCByIndex(0);
+
+	Serial.print("Temperature1: ");
+	Serial.println(ret);
+	return ret;
 }
 SensorValue readTempDht(int pin) {
 	SensorValue result;

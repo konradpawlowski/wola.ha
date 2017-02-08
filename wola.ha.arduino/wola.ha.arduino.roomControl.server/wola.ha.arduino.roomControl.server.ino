@@ -61,6 +61,8 @@ int i = 0;
 void setup() {
 	// put your setup code here, to run once:
 	//ClearEeprom();
+	//WiFiManager wifiManager;
+	//wifiManager.resetSettings();
 	Serial.begin(115200);
 	EEPROM.begin(512);
 	settings = ReadSettings();
@@ -181,14 +183,22 @@ void GetTemp() {
 
 float GetTempDs18b20(TempSensorEnum temp) {
 	DallasTemperature sensors;
-
+	float ret = 0;
 	switch (temp)
 	{
 	case Temp1:
 		sensors.setOneWire(&oneWireTemp1);
+		if (settings.Temp1.IsInBox)
+		{
+			ret -= 2.9;
+		}
 		break;
 	case Temp2:
 		sensors.setOneWire(&oneWireTemp2);
+		if (settings.Temp1.IsInBox)
+		{
+			ret -= 2.9;
+		}
 		break;
 
 	}
@@ -232,7 +242,9 @@ float GetTempDs18b20(TempSensorEnum temp) {
 	Serial.print("Temperature: ");
 	Serial.println(sensors.getTempCByIndex(0));
 	Serial.println("\n\n\n\n");
-	return sensors.getTempCByIndex(0);
+
+	ret += sensors.getTempCByIndex(0);
+	return ret;
 }
 TSensorValue readTempDht(int pin) {
 	TSensorValue result;

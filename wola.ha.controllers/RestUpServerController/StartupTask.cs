@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Background;
 using Restup.Webserver.Rest;
 using Restup.Webserver.Http;
 using Restup.Webserver.File;
+using RestUpServerController.Controller;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -25,13 +26,14 @@ namespace RestUpServerController
             // from closing prematurely by using BackgroundTaskDeferral as
             // described in http://aka.ms/backgroundtaskdeferral
             //
-
-            _deferral = taskInstance.GetDeferral();
-            //  var restRouteHandler = new RestRouteHandler();
-
+            var restRouteHandler = new RestRouteHandler();
 
             try
             {
+                _deferral = taskInstance.GetDeferral();
+                
+                restRouteHandler.RegisterController<SensorsValuesController>();
+
                 var configuration = new HttpServerConfiguration()
               .ListenOnPort(8800)
               //  .RegisterRoute("api", restRouteHandler)

@@ -36,6 +36,18 @@ void createWebServer()
 			  else
 				  param.Temp2.IsOutside = 0;
 
+			  if (server.hasArg("Temp1_IsInBox"))
+				  param.Temp1.IsInBox = 1;
+			  else
+				  param.Temp1.IsInBox = 0;
+
+			  if (server.hasArg("Temp2_IsInBox"))
+				  param.Temp2.IsInBox = 1;
+			  else
+				  param.Temp2.IsInBox = 0;
+
+
+
 
 			  if (server.hasArg("SelectedRelay"))
 				  param.SelectedRelay = server.arg("SelectedRelay").toInt();
@@ -151,11 +163,29 @@ void createWebServer()
 		statusCode = 200;
 		server.send(statusCode, "text/html", content);
 	});
-	server.on("/clear", []() {
+	server.on("/clear_wifi", []() {
+		WiFiManager wifiManager;
+		wifiManager.resetSettings();
+
+		ESP.restart();
+		content = ContentInfo("Wyczyszczono dane i ustawienia wifi");
+		statusCode = 200;
+		server.send(statusCode, "text/html", content);
+	});
+	server.on("/clear_eeprom", []() {
+
+		ClearEeprom();
+		ESP.restart();
+
+		content = ContentInfo("Wyczyszczono dane i ustawienia wifi");
+		statusCode = 200;
+		server.send(statusCode, "text/html", content);
+	});
+	server.on("/clear_all", []() {
 		WiFiManager wifiManager;
 		wifiManager.resetSettings();
 		ClearEeprom();
-
+		ESP.restart();
 		content = ContentInfo("Wyczyszczono dane i ustawienia wifi");
 		statusCode = 200;
 		server.send(statusCode, "text/html", content);

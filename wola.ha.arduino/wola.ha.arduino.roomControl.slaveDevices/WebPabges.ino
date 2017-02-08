@@ -133,6 +133,16 @@ String ContentUstawienia() {
 	content += F("/>​</td>");
 	content += F("		</tr>");
 
+	content += F("		<tr>");
+	content += F("			<td><strong>Czujnik w obudowie</strong></td>");
+
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp1_IsInBox\" type=\"checkbox\" ");
+	if (settings.Temp1.IsInBox == 1)
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
+
+
 	content += F("	</tbody>");
 	content += F("</table>");
 
@@ -171,6 +181,16 @@ String ContentUstawienia() {
 	content += F("/>​</td>");
 	content += F("		</tr>");
 
+	content += F("		<tr>");
+	content += F("			<td><strong>Czujnik w obudowie</strong></td>");
+
+	content += F("			<td><span style=\"font-weight: bold;\">&nbsp;</span><input name=\"Temp2_IsInBox\" type=\"checkbox\" ");
+	if (settings.Temp2.IsInBox == 1)
+		content += F("checked");
+	content += F("/>​</td>");
+	content += F("		</tr>");
+
+
 	content += F("	</tbody>");
 	content += F("</table>");
 	content += F("<p>​​</p>");
@@ -180,6 +200,9 @@ String ContentUstawienia() {
 	content += F("<p>&nbsp;</p>");
 	content += F("<p>&nbsp;</p>");
 	content += F("<p>&nbsp;</p>");
+	content += F("</br>");
+	content += F("</br>");
+	content += F("</br>");
 	content += F("</br>");
 	content += F("<div class=\"wifi\" style=\"background:#eee; border:1px solid #ccc; padding:5px 10px; \">");
 	content += F("<p><strong>Czy włączyć tryb AP dla sieci WiFi :&nbsp;</strong><input name=\"IsWifiAp\" type=\"checkbox\" ");
