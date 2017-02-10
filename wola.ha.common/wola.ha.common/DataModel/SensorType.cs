@@ -4,7 +4,10 @@ namespace wola.ha.common.DataModel
 {
     public class SensorType
     {
-        [PrimaryKey, MaxLength(10), NotNull, Indexed]
+        [PrimaryKey]
+        public int Id { get; set; }
+
+        [MaxLength(10), NotNull, Indexed]
         public string Type { get; set; }
 
         [MaxLength(100)]

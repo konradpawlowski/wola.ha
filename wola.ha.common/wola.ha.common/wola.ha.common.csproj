@@ -107,26 +107,37 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\DataBus.cs" />
     <Compile Include="DataModel\DataBusType.cs" />
+    <Compile Include="DataModel\DataContext.cs" />
     <Compile Include="DataModel\DebugTraceListener.cs" />
     <Compile Include="DataModel\LocalDb.cs" />
     <Compile Include="DataModel\SensorHumidityValues.cs" />
+    <Compile Include="DataModel\SensorKind.cs" />
     <Compile Include="DataModel\SensorPressureValues.cs" />
     <Compile Include="DataModel\Sensors.cs" />
     <Compile Include="DataModel\SensorOnOffValue.cs" />
     <Compile Include="DataModel\SensorTemperatureValues.cs" />
     <Compile Include="DataModel\SensorType.cs" />
+    <Compile Include="DataModel\TableBase.cs" />
+    <Compile Include="DataModel\Versioning\DBVerion.cs" />
+    <Compile Include="DataModel\Versioning\Verion.cs" />
     <Compile Include="Devices\BMP180\Bmp180Sensor.cs" />
     <Compile Include="Devices\I2c\I2CMessageFrame.cs" />
     <Compile Include="Devices\I2c\I2CResponseStatus.cs" />
     <Compile Include="Devices\Mcp23017\MCP23017.cs" />
     <Compile Include="Devices\I2c\I2COperation.cs" />
     <Compile Include="Devices\PCF8591\PCF8591.cs" />
+    <Compile Include="Devices\Storage\OneDriveConnector.cs" />
     <Compile Include="Enums\TempSensorEnum.cs" />
     <Compile Include="Devices\I2c\ArduinoI2CResponse.cs" />
     <Compile Include="Devices\I2c\I2CAddressException.cs" />
     <Compile Include="Devices\I2c\I2CDeviceNotFoundException.cs" />
     <Compile Include="Devices\I2c\I2cHelper.cs" />
+    <Compile Include="Factory\ReadTemperatureFactory.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Model\Context.cs" />
+    <Compile Include="Model\SQLException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\wola.ha.common.rd.xml" />
   </ItemGroup>

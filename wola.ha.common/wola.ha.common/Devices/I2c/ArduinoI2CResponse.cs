@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace wola.ha.common
 {
-    struct ArduinoI2CResponse
+    public struct ArduinoI2CResponse
     {
         public float Temperature { get; set; }
         public float Humidity { get; set; }
-        public bool Value { get; set; }
+        public short Value { get; set; }
+        public short Status { get; set; }
 
     };
 }

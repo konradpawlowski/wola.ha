@@ -1,60 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Contacts;
-using Windows.Storage;
+using SQLite.Net.Async;
 using SQLite.Net;
-using SQLite.Net.Platform.WinRT;
+using wola.ha.common.DataModel;
+using wola.ha.common.DataModel.Versioning;
 
-namespace wola.ha.common.DataModel
+namespace wola.ha.common.Model
 {
-    public static class LocalDb
+    /// <summary>
+    /// Context for all tables
+    /// </summary>
+    public class Context : DataContext
     {
-        
-        private const string DbName = "wola.ha.db.sqlite";
-        private static readonly string DbPath = Path.Combine(ApplicationData.Current.LocalFolder.Path , DbName);
-      //  private static readonly string DbPath = Path.Combine(@"C:\temp\", DbName);
-        public static SQLiteConnection DbConnection => new SQLiteConnection(new SQLitePlatformWinRT(), DbPath);
-
-        public async static void CreateDatabase()
+        #region SINGLETON
+        private static Context _Instance;
+        public static Context Instance
         {
+            get
+            {
+                if (_Instance == null)
+                {
+                    throw new InvalidOperationException("The Context needs to be async initialized first. Use await Initzialize()");
+                }
 
-          //  if(!CheckDbAsync())
+                return _Instance;
+            }
+        }
+        #endregion
+
+        public override int Version
+        {
+            get { return 0; }
+        }
+        public override Task<int> LastVersion()
+        {
+            return DBVersionsContext.Instance.Get(DatabaseVersionKey);
+        }
+        public override string DatabaseVersionKey
+        {
+            get { return Folder.Name + DatabaseFile; }
+        }
+        public override string DatabaseFile
+        {
+            get { return "wola.ha.db"; }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+
+        public override async Task Reset()
+        {
             try
             {
-                using (SQLiteConnection conn = DbConnection)
+              //  await connection.DropTableAsync<Room>();
+               // await connection.DropTableAsync<Category>();
+               // await connection.DropTableAsync<Action>();
 
-                {
-                    // Activate Tracing 
-                    conn.TraceListener = new DebugTraceListener();
-
-                    conn.CreateTable<SensorKind>();
-                    conn.CreateTable<DataBusType>();
-                    conn.CreateTable<DataBus>();
-                    conn.CreateTable<SensorType>();
-                    conn.CreateTable<Sensors>();
-                    conn.CreateTable<SensorTemperatureValues>();
-                    conn.CreateTable<SensorHumidityValues>();
-                    conn.CreateTable<SensorOnOffValue>();
-                    conn.CreateTable<SensorPressureValues>();
-
-                    FillDb();
-                }
+                await DBVersionsContext.Instance.Set(DatabaseVersionKey, Version);
             }
-            catch (Exception)
+            catch (SQLiteException ex)
             {
-
-                throw;
+                throw new SQLException("Reset failed.", ex.Message);
             }
         }
 
-        private static void FillDb()
+        protected override async Task UpgradeTables(SQLiteAsyncConnection c)
         {
-            using (var db = DbConnection)
+            try
+            {
+                await Task.Delay(100);
+            }
+            catch (SQLiteException ex)
+            {
+                throw new SQLException("UpgradeTables failed.", ex.Message);
+            }
+
+        }
+        protected override async Task CreateTables(SQLiteAsyncConnection c)
+        {
+            try
+            {
+      
+                await connection.CreateTableAsync<SensorKind>();
+                await connection.CreateTableAsync<DataBusType>();
+                await connection.CreateTableAsync<DataBus>();
+                await connection.CreateTableAsync<SensorType>();
+                await connection.CreateTableAsync<Sensors>();
+                await connection.CreateTableAsync<SensorTemperatureValues>();
+                await connection.CreateTableAsync<SensorHumidityValues>();
+                await connection.CreateTableAsync<SensorOnOffValue>();
+                await connection.CreateTableAsync<SensorPressureValues>();
+                
+                await DBVersionsContext.Instance.Set(DatabaseVersionKey, Version);
+              //  await FillDb();
+            }
+            catch (SQLiteException ex)
+            {
+                throw new SQLException("CreateTables failed.", ex.Message);
+            }
+        }
+        private async Task FillDb()
+        {
+            try
             {
                 List<DataBusType> dataBusType = new List<DataBusType>
                 {
@@ -79,7 +131,7 @@ namespace wola.ha.common.DataModel
                         Id = 3,
                         Type = "restup"
                     }
-                     
+
                 };
                 List<SensorKind> dataSensorKind = new List<SensorKind>
                 {
@@ -146,7 +198,7 @@ namespace wola.ha.common.DataModel
                         Descript = "Expander wyjść",
                         Address = "0x27"
                     }
-                   
+
                 };
                 List<SensorType> sensorTypes = new List<SensorType>
                 {
@@ -175,29 +227,29 @@ namespace wola.ha.common.DataModel
 
                 };
 
-
-                db.InsertOrReplaceAll(dataBusType);
-                db.InsertOrReplaceAll(dataSensorKind);
-                db.InsertOrReplaceAll(dataBus);
-                db.InsertOrReplaceAll(sensorTypes);
-                db.InsertOrReplaceAll(sensors);
-
+                await connection.InsertOrReplaceAsync(dataBusType);
+                await connection.InsertOrReplaceAsync(dataSensorKind);
+                await connection.InsertOrReplaceAsync(dataBus);
+                await connection.InsertOrReplaceAsync(sensorTypes);
+                await connection.InsertOrReplaceAsync(sensors);
             }
+            catch(SQLException ex)
+            {
+                Log.e(ex);
+            }
+
+            
         }
-
-        private static async Task<bool> CheckDbAsync()
+        public static async Task Initialize()
         {
-            bool dbExist = true;
-            try
+            if (_Instance == null)
             {
-                StorageFile sf = await ApplicationData.Current.LocalFolder.GetFileAsync(DbName);
-            }
-            catch (Exception)
-            {
+                // init Database for database versioning first
+                await DBVersionsContext.Instance.Init(Windows.Storage.ApplicationData.Current.LocalFolder);
 
-                dbExist = false;
+                _Instance = new Context();
+                await _Instance.Init(Windows.Storage.ApplicationData.Current.LocalFolder);
             }
-            return dbExist;
         }
     }
 }

@@ -8,6 +8,7 @@ using Restup.Webserver.Rest;
 using Restup.Webserver.Http;
 using Restup.Webserver.File;
 using RestUpServerController.Controller;
+using wola.ha.common.Model;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -31,12 +32,16 @@ namespace RestUpServerController
             try
             {
                 _deferral = taskInstance.GetDeferral();
-                
+
+                // initialize sqlite context
+                await Context.Initialize();
+
+
                 restRouteHandler.RegisterController<SensorsValuesController>();
 
                 var configuration = new HttpServerConfiguration()
               .ListenOnPort(8800)
-              //  .RegisterRoute("api", restRouteHandler)
+                .RegisterRoute("api", restRouteHandler)
               //  .RegisterRoute(new StaticFileRouteHandler(@"wola.ha\wola.ha.view.web\Web"))
               .RegisterRoute(new StaticFileRouteHandler(@"wola.ha.view.web\Web"))
               .EnableCors(); // allow cors requests on all origins

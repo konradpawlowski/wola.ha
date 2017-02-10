@@ -1,7 +1,8 @@
 ﻿namespace wola.ha.common.Enums
 {
-    public enum SensorKindEnum
+    public enum SensorTypeEnum 
     {
+        test = 0,
         Ds18B20 = 1,
         Dht11 = 2, 
         Dht22 = 3,
@@ -11,12 +12,13 @@
   
 
     }
-    public enum SensorTypeEnum
+    public enum SensorKindEnum
     {
-        Temperature,
-        Pressure,
-        Humidity,
-        OnOff
+        Temperature = 1,
+        Pressure = 3,
+        Humidity = 2,
+        OnOff =4,
+        Electricity = 5
     }
 
 }
