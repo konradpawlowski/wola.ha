@@ -96,7 +96,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\SensorsValuesController.cs" />
+    <Compile Include="Controller\SensorPressureValueController.cs" />
+    <Compile Include="Controller\SensorHumidityValueController.cs" />
+    <Compile Include="Controller\SensorTemperatureValueControler.cs" />
     <Compile Include="Model\SensorValueDataContent.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

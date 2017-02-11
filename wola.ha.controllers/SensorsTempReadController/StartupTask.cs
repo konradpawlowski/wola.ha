@@ -17,6 +17,9 @@ using Windows.System.Threading;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using wola.ha.common;
+using wola.ha.common.Helper;
+using Windows.System;
+using System.Security.Claims;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -113,17 +116,19 @@ namespace SensorsTempReadController
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://192.168.200.10:8800/");
+
+               await  WolaClient.PostItemToController<SensorTemperatureValues>("SensorTempValue", item);
+             //   HttpClient client = new HttpClient();
+             //   client.BaseAddress = new Uri("http://192.168.200.10:8800/");
                 
-                string postBody = JsonConvert.SerializeObject(item);
+             //   string postBody = JsonConvert.SerializeObject(item);
 
-             //   HttpResponseMessage response = await client.PostAsJsonAsync("api/SensorTempValue", product);
+             ////   HttpResponseMessage response = await client.PostAsJsonAsync("api/SensorTempValue", product);
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+             //   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 
-                var wcfResponse = await client.PostAsync("api/SensorTempValue", new StringContent(postBody, Encoding.UTF8, "application/json"));
+             //   var wcfResponse = await client.PostAsync("api/SensorTempValue", new StringContent(postBody, Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {

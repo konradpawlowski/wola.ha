@@ -135,8 +135,13 @@
     <Compile Include="Devices\I2c\I2CDeviceNotFoundException.cs" />
     <Compile Include="Devices\I2c\I2cHelper.cs" />
     <Compile Include="Factory\ReadTemperatureFactory.cs" />
+    <Compile Include="Helper\BaseApiClient.cs" />
+    <Compile Include="Helper\LoggerFactory.cs" />
+    <Compile Include="Helper\WolaClient.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Model\Context.cs" />
+    <Compile Include="Model\HttpResponseException.cs" />
+    <Compile Include="Model\ResponseModelStatus.cs" />
     <Compile Include="Model\SQLException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\wola.ha.common.rd.xml" />

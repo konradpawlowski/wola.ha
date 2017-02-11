@@ -37,7 +37,9 @@ namespace RestUpServerController
                 await Context.Initialize();
 
 
-                restRouteHandler.RegisterController<SensorsValuesController>();
+                restRouteHandler.RegisterController<SensorTemperatureValueControler>();
+                restRouteHandler.RegisterController<SensorHumidityValueController>();
+                restRouteHandler.RegisterController<SensorPressureValueController>();
 
                 var configuration = new HttpServerConfiguration()
               .ListenOnPort(8800)

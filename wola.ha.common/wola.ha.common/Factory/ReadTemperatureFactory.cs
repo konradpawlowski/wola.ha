@@ -19,15 +19,13 @@ namespace wola.ha.common.Factory
             try
             {
                 SensorTemperatureValues val = new SensorTemperatureValues();
-                I2CMessageFrame message = new I2CMessageFrame();
-
-                message.Operation = I2COperation.Temp;
-                message.TempSensor = sensor.SensorType == 1 ? SensorTypeEnum.Ds18B20 : SensorTypeEnum.test;
-                message.Pin = sensor.Pin != null ? short.Parse(sensor.Pin) : (short)0;
-                message.SensorAddress =  StringToByteArray(string.IsNullOrEmpty(sensor.Address) ? "" :   sensor.Address);
-
-
-                
+                I2CMessageFrame message = new I2CMessageFrame()
+                {
+                    Operation = I2COperation.Temp,
+                    TempSensor = sensor.SensorType == 1 ? SensorTypeEnum.Ds18B20 : SensorTypeEnum.test,
+                    Pin = sensor.Pin != null ? short.Parse(sensor.Pin) : (short)0,
+                    SensorAddress = StringToByteArray(string.IsNullOrEmpty(sensor.Address) ? "" : sensor.Address)
+                };
                 ArduinoI2CResponse response = await GetTemperatureFromArduino(Convert.ToInt32(sensor.DataBusEx.Address, 16), message);
                 if (response.Status == (short)I2CResponseStatus.Ok)
                 {
