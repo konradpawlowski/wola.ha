@@ -41,12 +41,11 @@ namespace SensorsTempReadController
 
             _defferal = taskInstance.GetDeferral();
             taskInstance.Canceled += TaskInstance_Canceled;
-            // sprawdzenie bazy danych
-             LocalDb.CreateDatabase();
+            LoggerFactory.InitialLogger();
 
             try
             {
-                var timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromMinutes(1));
+                var timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromMinutes(5));
                // var timer1 = ThreadPoolTimer.CreatePeriodicTimer(Timer1_Tick, TimeSpan.FromMilliseconds(10000));
 
 
@@ -92,16 +91,21 @@ namespace SensorsTempReadController
 
         private async Task ReadTemperature()
         {
-            using (SQLiteConnection db = LocalDb.DbConnection)
+            try
             {
-                List<Sensors> tempSensors = db.Table<Sensors>().Where(w => w.SensorKind == (int)SensorKindEnum.Temperature && w.DataBus  == 1).ToList();
+                List<Sensors> tempSensors = await WolaClient.GetFilteredListFromControllerAction<Sensors>("GetSensors", "ByDataBus",1,null);
+                    
                 foreach (Sensors item in tempSensors)
                 {
-                    item.GetEx();
+                   
                     SensorTemperatureValues val = await ReadTemperatureFromSensor(item);
-                    if (val.Value != 0.0m)
+                    if (val.Date != DateTime.MinValue)
                        await  PostTemp(val);
                 }
+            }
+            catch(Exception ex)
+            {
+                throw;
             }
                 
         }
@@ -116,19 +120,8 @@ namespace SensorsTempReadController
         {
             try
             {
-
-               await  WolaClient.PostItemToController<SensorTemperatureValues>("SensorTempValue", item);
-             //   HttpClient client = new HttpClient();
-             //   client.BaseAddress = new Uri("http://192.168.200.10:8800/");
-                
-             //   string postBody = JsonConvert.SerializeObject(item);
-
-             ////   HttpResponseMessage response = await client.PostAsJsonAsync("api/SensorTempValue", product);
-
-             //   client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
-             //   var wcfResponse = await client.PostAsync("api/SensorTempValue", new StringContent(postBody, Encoding.UTF8, "application/json"));
+                await  WolaClient.PostItemToController<SensorTemperatureValues>("SensorTempValue", item);
+            
             }
             catch (Exception ex)
             {

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using SQLite.Net.Attributes;
 using SQLite.Net;
+using wola.ha.common.Model;
+using System.Threading.Tasks;
 
 namespace wola.ha.common.DataModel
 {
@@ -37,16 +39,15 @@ namespace wola.ha.common.DataModel
         [Ignore]
         public SensorKind SensorKindEx { get; set; }
 
-        public void GetEx()
+        public async Task GetEx()
         {
             try
             {
-                using (SQLiteConnection db = LocalDb.DbConnection)
-                {
-                    DataBusEx = db.Table<DataBus>().Where(w => w.Id == this.DataBus).FirstOrDefault();
-                    SensorKindEx = db.Table<SensorKind>().Where(w => w.Id == SensorKind).FirstOrDefault();
-                    SensorTypeEx = db.Table<SensorType>().Where(w => w.Id == SensorType).FirstOrDefault();
-                }
+              
+                    DataBusEx =  await Context.Instance.Connection.Table<DataBus>().Where(w => w.Id == DataBus).FirstOrDefaultAsync();
+                    SensorKindEx = await Context.Instance.Connection.Table<SensorKind>().Where(w => w.Id == SensorKind).FirstOrDefaultAsync();
+                    SensorTypeEx = await Context.Instance.Connection.Table<SensorType>().Where(w => w.Id == SensorType).FirstOrDefaultAsync();
+              
             }
             catch (System.Exception)
             {

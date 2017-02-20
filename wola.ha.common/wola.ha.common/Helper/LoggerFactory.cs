@@ -2,8 +2,10 @@
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using Windows.Storage;
 
 namespace wola.ha.common.Helper
 {
@@ -13,23 +15,26 @@ namespace wola.ha.common.Helper
         public static void InitialLogger()
         {
             Serilog.Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile(@"logi\log-{Date}.txt")
+                .WriteTo.RollingFile(Path.Combine(ApplicationData.Current.LocalFolder.Path, @"logi\log-{Date}.txt"),flushToDiskInterval:new TimeSpan(0,1,0))
+                .WriteTo.ColoredConsole()
+                
+                
                 .CreateLogger();
         }
 
-        public static void InitialLoggerByServer(string path)
-        {
-            Serilog.Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile(path + @"\logi\log-{Date}.txt")
-                .CreateLogger();
-        }
+        //public static void InitialLoggerByServer(string path)
+        //{
+        //    Serilog.Log.Logger = new LoggerConfiguration()
+        //        .WriteTo.RollingFile(Path.Combine(ApplicationData.Current.LocalFolder.Path, @"logi\log-{Date}.txt"))
+        //        .CreateLogger();
+        //}
 
-        public static void InitialLoggerByServer()
-        {
-            Serilog.Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile(@"logi\log-{Date}.txt")
-                .CreateLogger();
-        }
+        //public static void InitialLoggerByServer()
+        //{
+        //    Serilog.Log.Logger = new LoggerConfiguration()
+        //        .WriteTo.RollingFile(Path.Combine(ApplicationData.Current.LocalFolder.Path, @"logi\log-{Date}.txt"))
+        //        .CreateLogger();
+        //}
 
 
         public static string LogException(Exception ex, string extrainfo = "", dynamic paraminfo = null)
@@ -143,7 +148,15 @@ namespace wola.ha.common.Helper
             Serilog.Log.Information(info, extrainfo);
         }
 
+        public static void LogError(string message, string extrainfo = "", dynamic paraminfo = null)
+        {
+            Serilog.Log.Error(message, extrainfo);
+        }
 
+        public static void LogWarning(string message, string extrainfo = "", dynamic paraminfo = null)
+        {
+            Serilog.Log.Warning(message, extrainfo);
+        }
     }
 
 }

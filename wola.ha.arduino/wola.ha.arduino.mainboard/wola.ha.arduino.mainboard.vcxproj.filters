@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wola.ha.arduino.mainboard.ino" />
+    <None Include="..\..\wola.ha.controllers\sensorstempreadcontroller\project.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.wola.ha.arduino.mainboard.vsarduino.h">
@@ -36,5 +37,22 @@
     <ClInclude Include="..\..\..\..\..\Praca\Dokumenty\Dokumnety\Arduino\libraries\OneWire\OneWire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FastCRC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastCRC_cpu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastCRC_tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FastCRChw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastCRCsw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

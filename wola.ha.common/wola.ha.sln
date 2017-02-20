@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.common", "wola.ha.common\wola.ha.common.csproj", "{048E15D6-7241-4F51-92EF-058C6DF18BB3}"
 EndProject
@@ -30,6 +30,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wola.ha.view.web", "..\wola.ha.view\wola.ha.view.web\wola.ha.view.web.csproj", "{320130D1-7543-4E37-9A36-21A4A9D85E52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestUpServerController", "..\wola.ha.controllers\RestUpServerController\RestUpServerController.csproj", "{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wola.ha.arduuino.core", "..\wola.ha.arduino\wola.ha.arduuino.core\wola.ha.arduuino.core.vcxproj", "{A21E4B27-14D6-407C-8D9F-386C8650EB75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testy", "Testy", "{4E9C416A-CF29-4AAD-9BC7-AD6DF2DBC768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwpTesty", "..\Testy\UwpTesty\UwpTesty.csproj", "{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +167,36 @@ Global
 		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.ActiveCfg = Release|x86
 		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.Build.0 = Release|x86
 		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7}.Release|x86.Deploy.0 = Release|x86
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Debug|ARM.ActiveCfg = Debug|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Debug|x64.ActiveCfg = Debug|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Debug|x86.ActiveCfg = Debug|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Debug|x86.Build.0 = Debug|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Release|ARM.ActiveCfg = Release|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Release|x64.ActiveCfg = Release|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Release|x86.ActiveCfg = Release|Win32
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75}.Release|x86.Build.0 = Release|Win32
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|ARM.Build.0 = Debug|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|ARM.Deploy.0 = Debug|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x64.ActiveCfg = Debug|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x64.Build.0 = Debug|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x64.Deploy.0 = Debug|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x86.ActiveCfg = Debug|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x86.Build.0 = Debug|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Debug|x86.Deploy.0 = Debug|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|Any CPU.ActiveCfg = Release|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|ARM.ActiveCfg = Release|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|ARM.Build.0 = Release|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|ARM.Deploy.0 = Release|ARM
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x64.ActiveCfg = Release|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x64.Build.0 = Release|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x64.Deploy.0 = Release|x64
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x86.ActiveCfg = Release|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x86.Build.0 = Release|x86
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,5 +211,7 @@ Global
 		{D7BB47F4-8A85-4E47-84CC-9B0E8119D87C} = {0CD692D4-6F75-4F97-835D-544A5FDD2FA1}
 		{320130D1-7543-4E37-9A36-21A4A9D85E52} = {F6F02C30-97B2-4A1A-BDCF-BBB2F135DCD7}
 		{E5B34F5D-952F-4A5D-9B3B-3B208BA96DB7} = {D7BB47F4-8A85-4E47-84CC-9B0E8119D87C}
+		{A21E4B27-14D6-407C-8D9F-386C8650EB75} = {202355E4-9B63-4CEB-A3D2-435C440C79DB}
+		{631F4A2D-FB3E-43B8-AADA-D4DC6A67D4E3} = {4E9C416A-CF29-4AAD-9BC7-AD6DF2DBC768}
 	EndGlobalSection
 EndGlobal

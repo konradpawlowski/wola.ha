@@ -40,6 +40,8 @@ namespace RestUpServerController
                 restRouteHandler.RegisterController<SensorTemperatureValueControler>();
                 restRouteHandler.RegisterController<SensorHumidityValueController>();
                 restRouteHandler.RegisterController<SensorPressureValueController>();
+                restRouteHandler.RegisterController<SensorsController>();
+
 
                 var configuration = new HttpServerConfiguration()
               .ListenOnPort(8800)

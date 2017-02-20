@@ -22,5 +22,6 @@ enum I2CResponseStatus {
 	BRAK,
 	OK,
 	ERROR,
-	WARRNING
+	WARRNING,
+	CRC_ERROR
 };

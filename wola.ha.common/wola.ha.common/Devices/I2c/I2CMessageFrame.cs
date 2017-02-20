@@ -3,7 +3,7 @@ using wola.ha.common.Enums;
 
 namespace wola.ha.common.Devices.I2c
 {
-    internal struct I2CMessageFrame
+    public struct I2CMessageFrame
     {
         public I2COperation Operation { get; set; }
         public SensorTypeEnum TempSensor { get; set; }

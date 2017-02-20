@@ -1,11 +1,12 @@
-﻿#include <EEPROMVar.h>
-#include <EEPROMex.h>
-#include <DHT.h>
+﻿#include <DHT.h>
 #include <DallasTemperature\DallasTemperature.h>
 #include <Wire.h>
 #include <OneWire.h>
 #include "wola.ha.enums.h"
+#include "FastCRC.h"
 #include "wola.ha.struct.h"
+
+
 
 #define OneWirePin 8
 #define DhtPin 4
@@ -21,6 +22,11 @@ DallasTemperature sensors(&oneWire);
 int SensorsCount;
 float temps[10] = { 0,0,0,0,0,0,0,0,0,0 };
 bool ReciveMessage = false;
+
+unsigned long iStart = 0;
+unsigned long iTempStop = 0;
+static int  IntervalTemp = 10000;
+
 
 void setup() {
 	Serial.begin(115200);
@@ -53,79 +59,375 @@ void setup() {
 }
 
 void loop() {
+	//iStart = millis();
+	//if (iStart - iTempStop >= IntervalTemp)
+	//{
+		if (!ReciveMessage) {
 
-	if (!ReciveMessage) {
 
+			Serial.println("Requesting temperatures...");
+			sensors.requestTemperatures();
 
-		Serial.println("Requesting temperatures...");
-		sensors.requestTemperatures();
-
-		for (uint8_t i = 0; i < SensorsCount; i++)
-		{
-			DeviceAddress  add;
-			if (!sensors.getAddress(add, i))
+			for (uint8_t i = 0; i < SensorsCount; i++)
 			{
-				Serial.print("Unable to find address for Device ");
-				printAddress(add);
-				Serial.println(".");
-				continue;
+				DeviceAddress  add;
+				if (!sensors.getAddress(add, i))
+				{
+					Serial.print("Unable to find address for Device ");
+					printAddress(add);
+					Serial.println(".");
+					continue;
+				}
+				printData(sensors, add);
+				temps[i] = sensors.getTempC(add);
 			}
-			printData(sensors, add);
-			temps[i] = sensors.getTempC(add);
+
+			//readTempDht(4);
+	
 		}
-
-		//readTempDht(4);
-	}
+		//iTempStop = millis();
+	//}
 	delay(5000);
-
+	//crc16test();
+	
 }
+
+void crc16test()
+{
+
+	byte aa = 15;
+	const int bbb = sizeof(t_i2cMessageFrame);
+
+	Serial.println(aa);
+	Serial.println(bbb);
+	if (aa == (byte)bbb)
+		Serial.println("true");
+	//t_i2cResponse result;
+
+	//result.Temperature = 15.5;
+	//result.Humidity = 0;
+	//result.Status = OK;
+	//result.Value = false;
+	////FastCRC16 CRC16;
+
+	//Response = result;
+
+	//sendData();
+
+	//char buf[9] = { '1', '2', '3','4', '5', '6', '7', '8', '9' };
+	//Serial.println("CRC Example");
+	//Serial.println();
+
+	//Serial.print("CCITT-CRC of \"");
+
+	//for (unsigned int i = 0; i < sizeof(buf); i++) {
+	//	Serial.print((char)buf[i]);
+	//	
+	//}
+	//uint16_t value = CRC16.ccitt(buf, sizeof(buf));
+	//byte lo = value & 0xFF;
+	//byte hi = value >> 8;
+	//Serial.print("\" is: 0x");
+	//Serial.println(value, HEX);
+	//Serial.print("Lo is: 0x");
+	//Serial.println(lo, HEX);
+	//
+	//Serial.print("Hi is: 0x");
+	//Serial.println(hi, HEX);
+	//
+
+	//byte hi1 = 0x29;
+	//byte lo1 = 0xB1;
+
+	//uint16_t value1 = lo1 | uint16_t(hi1) << 8;
+	//Serial.println(value1, HEX);
+
+
+	//if (value == value1)
+	//	Serial.println("True");
+}
+
+
 #pragma region i2cComunication
 void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtˇw
+	//int j = 0;
+	//const int SizeAll = sizeof(t_i2cMessageFrame) + 4;
+	//byte	ReceivedData[SizeAll];
+//	const int SizeCrc = sizeof(t_i2cMessageFrame) + 2;
+//	const int Size = sizeof(t_i2cMessageFrame);
+	
+//	byte	CrcData[SizeCrc];
+//	byte	MessageData[Size];
+
+	//FastCRC16 CRC16;
+	//uint16_t  crc_val;
+
+	//ReciveMessage = true;
+
+	//Serial.print("reciving...");
+	//Serial.println(howMany);
+	//while (Wire.available()) {
+	//	ReceivedData[j] = Wire.read();
+	//	Serial.print(ReceivedData[j]);
+	//	j++;
+	//}
+	//Serial.println("");
+	//ReciveMessage = true;
+	//for (int i = 0; i < SizeCrc; i++)
+	//	CrcData[i] = ReceivedData[i];
+
+	////obliczanie crc16
+	//crc_val = CRC16.ccitt(CrcData, sizeof(CrcData));
+	//byte lo = crc_val & 0xFF;
+	//byte hi = crc_val >> 8;
+
+	//if (!((ReceivedData[SizeAll - 1] == hi) && (ReceivedData[SizeAll - 2] == lo)) )
+	//{ 
+	//	Serial.println("CRC Error");
+	//	Response.Status = CRC_ERROR;
+	//	
+	//	sendData();
+	//	
+	//}
+
+	//if (!(ReceivedData[1] == (byte)1)) // jesli  typ rozny od message
+	//{
+	//	Serial.println("NIe jest typu message");
+	//	Response.Status = ERROR;
+	//	
+	//	sendData();
+	//}
+	//for (int i = 0; i < (int)ReceivedData[0]; i++)
+	//	MessageData[i] = ReceivedData[i + 2];
+
+	//t_i2cMessageFrame tMessage; //Re-make the struct
+	//memcpy(&tMessage, MessageData, sizeof(tMessage));
+	//recivedDataManager(tMessage);
+
+
 	int j = 0;
-	byte	ReceivedData[sizeof(t_i2cMessageFrame)];
+	//const int SizeAll = sizeof(t_i2cMessageFrame) + 4;
+	int size = sizeof(t_i2cMessageFrame);
+	byte *RecivedData;
+	byte *MessageData;
+	
+	
+	RecivedData = new byte[howMany];
+	MessageData = new byte[size];
+	byte *wReciveData = RecivedData;
+
+
+	ReciveMessage = true;
+
 	Serial.print("reciving...");
 	Serial.println(howMany);
 	while (Wire.available()) {
-		ReceivedData[j] = Wire.read();
-		j++;
+		*wReciveData = Wire.read();
+		Serial.print((int)wReciveData);
+		Serial.print(":");
+		Serial.println(*wReciveData);
+		wReciveData++;
 	}
-	ReciveMessage = true;
+	Serial.println("::: Koniec odczytu");
 
+	int verification = VerifiReciveMessage(RecivedData,howMany);
+	if (verification == OK)
+	{
+		Serial.println("Weryfikacja crc OK");
 
-
-	t_i2cMessageFrame tMessage; //Re-make the struct
-	memcpy(&tMessage, ReceivedData, sizeof(tMessage));
-	printMessage(tMessage);
-	recivedDataManager(tMessage);
+		
+		byte *wMessageData = MessageData;
+		byte *wReciveData = &RecivedData[2];
+		
+		Serial.println("Przepisanie danych do tablicy CRC:");
+		for (int i = 0; i < (int)RecivedData[0]; i++)
+		{
+			*wMessageData = *wReciveData;
+			Serial.print((int)wMessageData);
+			Serial.print(" :: ");
+			Serial.println(*wMessageData);
+			wMessageData++;
+			wReciveData++;
+		}
+		Serial.println("Koniec przepisywania");
+		t_i2cMessageFrame tMessage; //Re-make the struct
+		memcpy(&tMessage, MessageData, sizeof(tMessage));
+		//printMessage(tMessage);
+		delete [] RecivedData;
+		delete[] MessageData;
+		//printMessage(tMessage);
+		recivedDataManager(tMessage);
+	}
+	else
+	{
+		Response.Humidity = 0;
+		Response.Temperature = 0;
+		Response.Value = 0;
+		Response.Status = verification;
+		sendData();
+	}
 
 }
 
 void sendData() {
-
 	const int size = sizeof(t_i2cResponse);
-	char	Response2[size];
+	const int SizeAll = size + 4;
+	const int SizeCrc = size + 2;
+
+	byte bSize = size;
+	FastCRC16 CRC16;
+	
+	byte	*Response2 = new byte[size];
+	byte	*CrcData = new byte[SizeCrc];
+	byte	*AllData = new byte[SizeAll];
+
+	uint16_t  crc_val;
+	Serial.println("============Response=====================");
 	printResponse(Response);
 	memcpy(Response2, &Response, size);
+	
+	byte *wCrcData = &CrcData[2];
+	byte *wResponse2 = Response2;
+	byte *wAllData = &AllData[2];
+	Serial.println("============Przepisywanie do crc =====================");
+	for (int i = 0; i < size; i++)
+	{	
 
-	/*Serial.println("Sending respomse");
-	for (size_t i = 0; i < size; i++)
+		*wCrcData = *wResponse2;
+		*wAllData = *wResponse2;
+		Serial.print((int)wCrcData);
+		Serial.print(" :: ");
+		Serial.println(*wCrcData);
+		wCrcData++ ;
+		wResponse2++;
+		wAllData++;
+	}
+	CrcData[0] = (char)size;
+	CrcData[1] = 2; // respose
+	AllData[0] = (char)size;
+	AllData[1] = 2; // respose
+	Serial.println("============Wyliczanie crc=====================");
+	//obliczanie crc16
+	crc_val = CRC16.ccitt(CrcData, SizeCrc);
+	Serial.print("Wartosc crc: ");
+	Serial.println(crc_val);
+
+	byte lo = crc_val & 0xFF;
+	byte hi = crc_val >> 8;
+	AllData[SizeAll - 2] = lo; // przypisanie mniej znaczacego bitu
+	AllData[SizeAll - 1] = hi; // przypisanie bardziej znaczaego bitu
+	byte *wCrcData2 = CrcData;
+	wAllData = &AllData[0];
+	//memcpy(AllData, &CrcData, SizeCrc);
+	Serial.println("============Przekopiowanie danych z crc do alldata=====================");
+	for (int i = 0; i < SizeCrc; i++)
 	{
-	Serial.print(i);
-	Serial.print("\t");
-	Serial.println((byte)Response2[i]);
-	}*/
-	Wire.write(Response2, size);
+		Serial.print((int)wCrcData2);
+		Serial.print(" :crc: ");
+		Serial.println(*wCrcData2);
 
-	memset(Response2, 0, size);
-	memset(&Response, 0, size);
+		//*wAllData = *wCrcData2;
 
+		Serial.print((int)wAllData);
+		Serial.print(" :AllData: ");
+		Serial.println(*wAllData);
+		
+		wCrcData2++;
+		
+	}
+	Serial.println(" ");
+
+	Serial.println("============All data=====================");
+	for (int i = 0; i < SizeAll; i++)
+	{
+		Serial.print(i);
+		Serial.print(" :: ");
+		Serial.println(AllData[i]);
+	}
+	Serial.println("Wysyłam");
+	Wire.write(AllData, SizeAll);
+
+	//memset(Response2, 0, size); //czyszczenie danych
+	memset(&Response, 0, size); //czyszczenie danych
+
+	delete[] AllData;
+	delete[] Response2;
+	delete[] CrcData;
 	ReciveMessage = false;
+
+	
 }
+
+
 #pragma endregion
 
 #pragma region ObslugaZapytania
-void recivedDataManager(t_i2cMessageFrame message) {
 
+int VerifiReciveMessage(byte  *bMessage, int size) {
+	const int SizeCrc = size - 2;
+	byte *CrcData =  new byte[SizeCrc];;
+	
+
+	byte *wCrcData = CrcData;
+	
+	int pozLo = size - 2;
+	int pozHi = size - 1;
+	byte *wMessageDataLo = &bMessage[pozLo];
+	byte *wMessageDataHi = &bMessage[pozHi];
+	byte *wMessageType   = &bMessage[1];
+	byte *wSizeData = bMessage;
+	Serial.print("PozLo: "); Serial.print(pozLo); Serial.print(" :: val: "); Serial.println(*wMessageDataLo);
+	Serial.print("PozHi: "); Serial.print(pozHi); Serial.print(" :: val: "); Serial.println(*wMessageDataHi);
+	Serial.print("Pozmessegatype: "); Serial.print(1); Serial.print(" :: val: "); Serial.println(*wMessageType);
+	Serial.print("PozSizeData: "); Serial.print(0); Serial.print(" :: val: "); Serial.println(*wSizeData);
+
+	
+
+	FastCRC16 CRC16;
+	uint16_t  crc_val;
+
+	Serial.print("Crc size");
+	Serial.println(SizeCrc);
+	for (int i = 0; i < SizeCrc; i++)
+	{
+		*wCrcData = bMessage[i];
+		Serial.print(*CrcData);
+		wCrcData++;
+	}
+	Serial.println("");
+	
+	//obliczanie crc16
+	crc_val = CRC16.ccitt(CrcData, SizeCrc);
+	byte lo = crc_val & 0xFF;
+	byte hi = crc_val >> 8;
+	Serial.print(lo); Serial.print("=="); Serial.print(*wMessageDataLo);
+	Serial.print(hi); Serial.print("=="); Serial.print(*wMessageDataHi);
+	if (!((*wMessageDataHi == hi) && (*wMessageDataLo == lo)))
+	{
+		Serial.println("CRC Error");
+		return CRC_ERROR;
+
+	}
+
+	if (!(*wMessageType == (byte)1)) // jesli  typ rozny od message
+	{
+		Serial.println("NIe jest typu message");
+		return ERROR;
+
+	}
+
+	delete [] CrcData;
+	
+	return OK;
+}
+
+
+
+
+
+
+void recivedDataManager(t_i2cMessageFrame message) {
+	printMessage(message);
 	switch (message.Operation)
 	{
 	case Temp:
@@ -166,10 +468,12 @@ t_i2cResponse readTemp(t_i2cMessageFrame message) {
 	t_i2cResponse result;
 	switch (message.TempSensor)
 	{
-	case Dht:
+	case Dht11:
 		result = readTempDht(message.Pin);
 		break;
-
+	case Dht22:
+		result = readTempDht(message.Pin);
+		break;
 	case Ds18B20:
 		result = readTempDs18b20(message.Pin, message.SensorAddress);
 		break;
@@ -249,6 +553,7 @@ t_i2cResponse readTempDht(int pin) {
 	//DHT dht(pin, type);
 	DHT dht;
 	dht.setup(pin);
+
 	delay(dht.getMinimumSamplingPeriod());
 	float h = dht.getHumidity();
 	float t = dht.getTemperature();
