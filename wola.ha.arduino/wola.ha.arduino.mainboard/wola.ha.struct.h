@@ -16,3 +16,4 @@ typedef struct I2CMessageFrame
 	byte SensorAddress[8];
 	bool Value;
 } t_i2cMessageFrame;
+

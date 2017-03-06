@@ -123,24 +123,30 @@
     <Compile Include="DataModel\Versioning\DBVerion.cs" />
     <Compile Include="DataModel\Versioning\Verion.cs" />
     <Compile Include="Devices\BMP180\Bmp180Sensor.cs" />
-    <Compile Include="Devices\I2c\I2CMessageFrame.cs" />
-    <Compile Include="Devices\I2c\I2CResponseStatus.cs" />
+    <Compile Include="Devices\Communication\I2c\I2CMessageFrame.cs" />
+    <Compile Include="Devices\Communication\I2c\I2CResponseStatus.cs" />
+    <Compile Include="Factory\SerialMessageFactory.cs" />
+    <Compile Include="Model\Serial\ISenssor.cs" />
+    <Compile Include="Model\Serial\SensorDht.cs" />
+    <Compile Include="Model\Serial\SensorDs8b20.cs" />
+    <Compile Include="Model\Serial\SerialMessageModel.cs" />
     <Compile Include="Devices\Mcp23017\MCP23017.cs" />
-    <Compile Include="Devices\I2c\I2COperation.cs" />
+    <Compile Include="Devices\Communication\I2c\I2COperation.cs" />
     <Compile Include="Devices\PCF8591\PCF8591.cs" />
     <Compile Include="Devices\Storage\OneDriveConnector.cs" />
     <Compile Include="Enums\TempSensorEnum.cs" />
-    <Compile Include="Devices\I2c\ArduinoI2CResponse.cs" />
-    <Compile Include="Devices\I2c\I2CAddressException.cs" />
-    <Compile Include="Devices\I2c\I2CDeviceNotFoundException.cs" />
+    <Compile Include="Devices\Communication\I2c\ArduinoI2CResponse.cs" />
+    <Compile Include="Devices\Communication\I2c\I2CAddressException.cs" />
+    <Compile Include="Devices\Communication\I2c\I2CDeviceNotFoundException.cs" />
     <Compile Include="Helper\I2cHelper.cs" />
     <Compile Include="Factory\ReadTemperatureFactory.cs" />
     <Compile Include="Helper\BaseApiClient.cs" />
     <Compile Include="Helper\Crc16Ccitt.cs" />
     <Compile Include="Helper\LoggerFactory.cs" />
+    <Compile Include="Helper\SerialHelper.cs" />
     <Compile Include="Helper\WolaClient.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Model\Context.cs" />
+    <Compile Include="DataModel\Context.cs" />
     <Compile Include="Model\HttpResponseException.cs" />
     <Compile Include="Model\ResponseModelStatus.cs" />
     <Compile Include="Model\SQLException.cs" />
@@ -151,6 +157,9 @@
     <SDKReference Include="SQLite.UWP.2015, Version=3.17.0">
       <Name>SQLite for Universal Windows Platform %28SQLite.UWP.2015, Version=3.17.0%29</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Structs\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

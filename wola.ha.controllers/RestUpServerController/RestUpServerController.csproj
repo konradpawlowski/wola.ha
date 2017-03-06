@@ -99,6 +99,7 @@
     <Compile Include="Controller\SensorPressureValueController.cs" />
     <Compile Include="Controller\SensorHumidityValueController.cs" />
     <Compile Include="Controller\SensorsController.cs" />
+    <Compile Include="Controller\Sensors\SensorValuesController.cs" />
     <Compile Include="Controller\SensorTemperatureValueControler.cs" />
     <Compile Include="Model\SensorValueDataContent.cs" />
     <Compile Include="StartupTask.cs" />

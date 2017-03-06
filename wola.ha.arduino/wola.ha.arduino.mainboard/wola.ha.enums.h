@@ -1,14 +1,11 @@
 #pragma once
-typedef enum I2COperation
+typedef enum Operation
 {
-	Temp,
-	Read,
-	Write,
-	Reset
-} TOperation;
+	SensorValues = 1
+} t_operation;
 
 
-enum TempSensorEnum
+enum SensorEnum
 {
 	Ds18B20 = 1,
 	Dht11 = 2,
@@ -17,6 +14,13 @@ enum TempSensorEnum
 	ACS712 = 5,
 	OnOff = 6
 
+};
+
+enum ValueType {
+	Temperature = 1,
+	Humidity = 2,
+	Presure = 3,
+	Electricity = 4
 };
 enum I2CResponseStatus {
 	BRAK,

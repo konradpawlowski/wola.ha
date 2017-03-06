@@ -46,12 +46,18 @@
     <ClInclude Include="FastCRC_tables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="wola_ha_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FastCRChw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FastCRCsw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wola_ha_common.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

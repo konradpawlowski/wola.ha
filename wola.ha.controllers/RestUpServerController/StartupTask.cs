@@ -9,6 +9,7 @@ using Restup.Webserver.Http;
 using Restup.Webserver.File;
 using RestUpServerController.Controller;
 using wola.ha.common.Model;
+using RestUpServerController.Controller.Sensors;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -41,6 +42,8 @@ namespace RestUpServerController
                 restRouteHandler.RegisterController<SensorHumidityValueController>();
                 restRouteHandler.RegisterController<SensorPressureValueController>();
                 restRouteHandler.RegisterController<SensorsController>();
+                restRouteHandler.RegisterController<SensorValuesController>();
+                
 
 
                 var configuration = new HttpServerConfiguration()

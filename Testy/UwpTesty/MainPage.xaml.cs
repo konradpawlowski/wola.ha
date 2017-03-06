@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using wola.ha.common.Helper;
-using wola.ha.common.Devices.I2c;
-using wola.ha.common.Enums;
 using Porrey.Uwp.IoT.Devices;
 using Porrey.Uwp.Ntp;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
@@ -42,17 +29,47 @@ namespace UwpTesty
             NtpClient ntp = new NtpClient();
             try
             {
+                //SensorDht dht = new SensorDht();
+                //dht.Humidity = 38;
+                //dht.Temperature = 25;
+                //dht.Pin = 5;
+                //dht.Date = DateTime.Now;
 
-                await Test();
+               
+                //string str = JsonConvert.SerializeObject(dht);
+                //Debug.WriteLine(str);
 
-                //Debug.WriteLine(ntp.ToString());
-                //await ds.InitializeAsync();
-                //Debug.Write(ds.DeviceAddress);
+
+                //"2017-02-27T14:17:41.9489929+01:00"
+                //string data = "2017-02-27T14:17:41.9489929+01:00";
+                //DateTime dd = new DateTime();
+                //if (DateTime.TryParse(data, out dd))
+                //    Debug.WriteLine("Parse OK 1");
+                //else
+                //    Debug.WriteLine("Parse NOT OK 1");
+                //data = "2017-02-27T14:17:41";
+                //if (DateTime.TryParse(data, out dd))
+                //    Debug.WriteLine("Parse OK 2");
+                //else
+                //    Debug.WriteLine("Parse NOT OK 2");
+
+                //string ddd = "{ \"Pin\":5,\"Temperature\":25.0,\"Humidity\":38.0,\"Date\":\"2016-03-27T14:25:02\"} "   ;
+                //SensorDht da = JsonConvert.DeserializeObject<SensorDht>(ddd);
+                //Debug.WriteLine(da.Date.ToString());
+                //// await Test();
+
+                Debug.WriteLine(ntp.ToString());
+                await ds.InitializeAsync();
+                Debug.Write(ds.DeviceAddress);
                 ////     DateTime? dt = await ntp.GetAsync(@"europe.pool.ntp.org");
-                // await ds.SetAsync(new DateTimeOffset(new DateTime(2017, 2, 16, 8, 39, 45)));
+                if (ds.IsInitialized)
+                    Debug.WriteLine("zains");
 
-                //var dto = await ds.GetAsync();
-                //Debug.WriteLine(dto.DateTime.ToLocalTime());
+                    var dto = new DateTimeOffset(DateTime.Now);
+                 await ds.SetAsync(dto);
+
+                var dtoa = await ds.GetAsync();
+                Debug.WriteLine(dtoa.DateTime.ToLocalTime());
 
 
             }
@@ -117,6 +134,13 @@ namespace UwpTesty
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             return bytes;
         }
+    }
+    public class SensorDht
+    {
+        public int Pin { get; set; }
+        public float Temperature { get; set; }
+        public float Humidity { get; set; }
+        public DateTime Date { get; set; }
     }
 
 }

@@ -4,12 +4,11 @@ using Restup.Webserver.Models.Schemas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using wola.ha.common;
-using wola.ha.common.DataModel;
 using wola.ha.common.Helper;
 using wola.ha.common.Model;
+using wola.ha.common.DataModel;
 
 namespace RestUpServerController.Controller
 {
@@ -22,9 +21,9 @@ namespace RestUpServerController.Controller
 
             try
             {
-                List<Sensors> values = await Context.Instance.Connection.Table<Sensors>().ToListAsync();
+                List<wola.ha.common.DataModel.Sensors> values = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().ToListAsync();
 
-                foreach (Sensors item in values)
+                foreach (wola.ha.common.DataModel.Sensors item in values)
                 {
                     await item.GetEx();
                 }
@@ -47,8 +46,8 @@ namespace RestUpServerController.Controller
 
             try
             {
-                List<Sensors> values = await Context.Instance.Connection.Table<Sensors>().ToListAsync();
-                foreach (Sensors item in values)
+                List<wola.ha.common.DataModel.Sensors> values = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().ToListAsync();
+                foreach (wola.ha.common.DataModel.Sensors item in values)
                 {
                     await item.GetEx();
                 }
@@ -69,8 +68,8 @@ namespace RestUpServerController.Controller
 
             try
             {
-                List<Sensors> values = await Context.Instance.Connection.Table<Sensors>().ToListAsync();
-                foreach (Sensors item in values)
+                List<wola.ha.common.DataModel.Sensors> values = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().ToListAsync();
+                foreach (wola.ha.common.DataModel.Sensors item in values)
                 {
                     await item.GetEx();
                 }
@@ -91,8 +90,8 @@ namespace RestUpServerController.Controller
 
             try
             {
-                List<Sensors> values = await Context.Instance.Connection.Table<Sensors>().ToListAsync();
-                foreach (Sensors item in values)
+                List<wola.ha.common.DataModel.Sensors> values = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().ToListAsync();
+                foreach (wola.ha.common.DataModel.Sensors item in values)
                 {
                     await item.GetEx();
                 }

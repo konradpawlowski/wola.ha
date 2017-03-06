@@ -128,12 +128,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\wola.ha.common\wola.ha.common\wola.ha.common.csproj">
-      <Project>{048e15d6-7241-4f51-92ef-058c6df18bb3}</Project>
-      <Name>wola.ha.common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="WindowsIoT, Version=10.0.14393.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
