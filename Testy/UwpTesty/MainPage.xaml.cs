@@ -6,6 +6,7 @@ using Porrey.Uwp.IoT.Devices;
 using Porrey.Uwp.Ntp;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Windows.Devices.Gpio;
 
 
 //Szablon elementu Pusta strona jest udokumentowany na stronie https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x415
@@ -17,9 +18,22 @@ namespace UwpTesty
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        private const int T1 = 5;
+        private const int T2 = 6;
+        private const int P1 = 19;
+        private const int P2 = 13;
+        GpioPin pt1;
+        GpioPin pt2;
+        GpioPin pp1;
+        GpioPin pp2;
+
+
+
         public MainPage()
         {
             this.InitializeComponent();
+            InitGPIO();
         }
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -85,6 +99,37 @@ namespace UwpTesty
                 ds.Dispose();
             }
         }
+        private void InitGPIO()
+        {
+            var gpio = GpioController.GetDefault();
+
+            // Show an error if there is no GPIO controller
+            if (gpio == null)
+            {
+             //   pin = null;
+                Debug.WriteLine("There is no GPIO controller on this device.");
+                return;
+            }
+
+            pt1 = gpio.OpenPin(T1);
+            pt2 = gpio.OpenPin(T2);
+            pp1 = gpio.OpenPin(P1);
+            pp2 = gpio.OpenPin(P2);
+            pp1.SetDriveMode(GpioPinDriveMode.Output);
+            pp2.SetDriveMode(GpioPinDriveMode.Output);
+            pt1.SetDriveMode(GpioPinDriveMode.Output);
+            pt2.SetDriveMode(GpioPinDriveMode.Output);
+
+            pp1.Write(GpioPinValue.High);
+            pp2.Write(GpioPinValue.High);
+            pt1.Write(GpioPinValue.Low);
+            pt2.Write(GpioPinValue.Low);
+
+
+
+            Debug.WriteLine("GPIO pin initialized correctly.");
+
+        }
         private async Task Test()
         {
             Ds1307 dtc = new Ds1307();
@@ -133,6 +178,26 @@ namespace UwpTesty
             for (int i = 0; i < numberChars; i += 2)
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             return bytes;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            pt1.Write(pt1.Read() == GpioPinValue.High ?  GpioPinValue.Low : GpioPinValue.High);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            pt2.Write(pt2.Read() == GpioPinValue.High ? GpioPinValue.Low : GpioPinValue.High);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            pp1.Write(pp1.Read() == GpioPinValue.High ? GpioPinValue.Low : GpioPinValue.High);
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            pp2.Write(pp2.Read() == GpioPinValue.High ? GpioPinValue.Low : GpioPinValue.High);
         }
     }
     public class SensorDht

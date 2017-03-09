@@ -100,5 +100,35 @@ namespace RestUpServerController.Controller.Sensors
             }
 
         }
+
+        [UriFormat("/SensorBmp180")]
+        public async Task<IPostResponse> AddSensorBmp180Value([FromContent] SensorBmp180 data)
+        {
+
+            try
+            {
+                var sensor = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().Where(w => w.SensorType == data.SensorType).FirstOrDefaultAsync();
+                if (sensor == null) return new PostResponse(PostResponse.ResponseStatus.Conflict, $"AddSensorDs18b20Value/{data}"); ;
+
+                var value = new SensorPressureValues
+                {
+                    SensorId = sensor.Id,
+                    Value = (decimal)data.Pressure,
+                    Date = data.Date
+
+                };
+
+
+                var ret = await Context.Instance.Connection.InsertAsync(value);
+                return new PostResponse(PostResponse.ResponseStatus.Created, $"AddSensorDs18b20Value/{ret}");
+            }
+            catch (Exception ex)
+            {
+                LoggerFactory.LogException(ex);
+                return new PostResponse(PostResponse.ResponseStatus.Conflict, $"SensorTemperatureValues/{data}");
+            }
+
+        }
+
     }
 }

@@ -13,10 +13,10 @@
 
 //#define Sprintln(a) (Serial.println(a))
 //#define Sprint(a) (Serial.println(a))
-
-
-#define Sprintln(a) 
+#define Sprintln(a)
 #define Sprint(a) 
+
+
 #define OneWirePin 4
 #define DhtPin 8
 #define TEMPERATURE_PRECISION 10
@@ -24,31 +24,64 @@
 
 #define IdentityDevice 1
 
-
-
-
-//t_i2cMessageFrame tMessage;
 t_i2cResponse Response;
 OneWire oneWire(OneWirePin);
 DallasTemperature sensors(&oneWire);
+Adafruit_BMP085 bmp;
+RTC_DS1307 rtc;
+
 int SensorsCount;
 float temps[10] = { 0,0,0,0,0,0,0,0,0,0 };
 bool ReciveMessage = false;
 
-RTC_DS1307 rtc;
-
+#pragma region LoopIntervals
 unsigned long iStart = 0;
 unsigned long iTempStop = 0;
 unsigned long iSendStop = 0;
-unsigned long iThermStop = 0;
-//static int  IntervalTemp = 10000;
+unsigned long iPressureStop = 0;
+#pragma endregion
 String inputString;
 
 void setup() {
-	Serial.begin(115200);
-	Sprintln("Inicjalizacja");
+	SetupSerial();
 	SetupRtc();
+	SetupDs182b();
+	SetupBmp180();
+}
 
+
+
+
+void loop() {
+
+	ReadTempFromDs(30000);
+	SendData(60000);
+
+	if (ReciveMessage) {
+		Sprintln(inputString);
+		ReciveMessage = false;
+	}
+}
+
+
+
+#pragma Setup
+void SetupRtc() {
+	if (!rtc.begin()) {
+		Serial.println("Couldn't find RTC");
+		while (1);
+	}
+
+	if (!rtc.isrunning()) {
+		Serial.println("RTC is NOT running!");
+		// following line sets the RTC to the date & time this sketch was compiled
+		//rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+		// This line sets the RTC with an explicit date & time, for example to set
+		// January 21, 2014 at 3am you would call:
+		//  rtc.adjust(DateTime(2017 , 2, 26, 17, 0, 0));
+	}
+}
+void SetupDs182b() {
 	sensors.begin();						  // locate devices on the bus
 	SensorsCount = sensors.getDeviceCount();
 
@@ -66,82 +99,26 @@ void setup() {
 		printResolution(sensors, add);
 	}
 
-
-
-
 }
-
-void SetupRtc() {
-	if (!rtc.begin()) {
-		Serial.println("Couldn't find RTC");
-		while (1);
-	}
-
-	if (!rtc.isrunning()) {
-		Serial.println("RTC is NOT running!");
-		// following line sets the RTC to the date & time this sketch was compiled
-		//rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-		// This line sets the RTC with an explicit date & time, for example to set
-		// January 21, 2014 at 3am you would call:
-		//  rtc.adjust(DateTime(2017 , 2, 26, 17, 0, 0));
+void SetupSerial() {
+	Serial.begin(115200);
+	Sprintln("Inicjalizacja");
+}
+void SetupBmp180() {
+	if (!bmp.begin())
+	{
+		Sprintln("Nie odnaleziono czujnika BMP085 / BMP180");
+		//while (1) {}
 	}
 }
 
+#pragma endregion
 
-void loop() {
-
-	ReadTempFromDs(5000);
-	SendData(7000);
-
-	//Thermistor(analogRead(0), 1000);
-
-	if (ReciveMessage) {
-		Sprintln(inputString);
-		ReciveMessage = false;
-	}
-
-
-}
-
-double Thermistor(int RawADC, int interval) {
-	double Temp = 0;
-	if (millis() - iThermStop >= interval) {
-
-		//	Sprint(millis() - iThermStop);
-		double Temp;
-		Temp = log(10000.0*((1024.0 / RawADC - 1)));
-		Temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * Temp * Temp))* Temp);
-		Temp = Temp - 273.15;
-		//return Temp;
-		//Sprint(F("Termistor"));
-		Sprintln(RawADC);;
-		iThermStop = millis();
-		return Temp;
-	}
-
-}
-
-String PrepareMessage(t_operation operation, SensorEnum sensor, String object) {
-	DynamicJsonBuffer jsonBuffer1;
-	JsonObject& root = jsonBuffer1.createObject();
-
-	root.set("MessageType", (int)operation); // rodzaj wysyłanej wiadomosci
-	root.set("SensorKind", (int)sensor);
-	root.set("Sender", IdentityDevice); // identyfikator kto wysyla
-	root.set("Reciver", 0);  // identyfikator do kogowysyłam 0 -RPI
-	root.set("DataBus", 1);
-	root.set("Message", object);  // serializowany obiekt docelowy
-	//root.prettyPrintTo(Serial);
-	//char *msg = new char[jsonBuffer1.size()];
-	String msg2;
-	root.printTo(msg2);
-	//	delete &jsonBuffer1;
-	return msg2;
-}
+#pragma region Loop
 
 
 // odczytywanie temperatury z czujnikow ds
-void ReadTempFromDs(int interval) {
+void ReadTempFromDs(unsigned long interval) {
 
 	if (millis() - iTempStop >= interval)
 	{
@@ -169,85 +146,28 @@ void ReadTempFromDs(int interval) {
 		iTempStop = millis();
 	}
 }
-
-String CreateDhtJson() {
-	DynamicJsonBuffer jsonBuffer;
-	JsonObject& root = jsonBuffer.createObject();
-	
-	//JsonObject& dht = root.createNestedObject("Dht");
-	root.set("Pin", DhtPin);
-	t_i2cResponse dtha = readTempDht(DhtPin);
-	root.set("Temperature", dtha.Temperature, 2);
-	root.set("Humidity", dtha.Humidity, 2);
-	root.set("Date", getDateTime());
-	String msg2;
-	root.printTo(msg2);
-
-
-	return msg2;
-}
-
-String  CreateDs18b20Json(int i) {
-	DeviceAddress add;
-	DynamicJsonBuffer jsonBuffer;
-	JsonObject& root = jsonBuffer.createObject();
-
-	// ds18b2 
-	//JsonObject& dataBus = root.createNestedObject("DataBus");
-	
-	
-	//JsonObject& se = root.createNestedObject("Ds18b20");
-
-	if (sensors.getAddress(add, i)) {
-
-		root.set("Address", getStringAddress(add));
-		root.set("Temperature", temps[i], 2);
-		root.set("Date", getDateTime());
-	}
-	String msg2;
-	root.printTo(msg2);
-
-
-	return msg2;
-}
-void SendData(int interval) {
+void SendData(unsigned long interval) {
+	Sprintln("weszlo do send");
+	Sprint(millis() - iSendStop);
+	Sprint(">=");
+	Sprint(interval);
 	if (millis() - iSendStop >= interval)
 	{
+		Sprintln("Wysylam");
 		SendDs18b20();
+		delay(200);
 		SendDht();
-	
+		delay(200);
+
+		SendBmp180();
 
 		
 		iSendStop = millis();
 
 	}
 }
-void SendDs18b20() {
-	//Serial.println("Weszlo send ds");
-	for (int i = 0; i < SensorsCount; i++) {
-	//	Serial.println(i);
-		String sensor = CreateDs18b20Json(i);
-		//Serial.println(sensor);
-		String msg = PrepareMessage(SensorValues, Ds18B20, sensor);
-	/*	char *ret = new char[msg.length()];
-		msg.toCharArray(ret,msg.length());
-		Serial.write(ret);*/
-		Serial.println(msg);
-		delay(1000);
-	}
 
-}
-void SendDht() {
-	//Serial.println("Weszlo send dht");
-		String sensor = CreateDhtJson();
-		String msg = PrepareMessage(SensorValues,Dht11, sensor);
-		/*char *ret = new char[msg.length()];
-		msg.toCharArray(ret, msg.length());
-		Serial.write(ret);*/
-		Serial.println(msg);
-		delay(1000);
-	}
-
+#pragma endregion
 
 #pragma region serial communication
 void serialEvent() {
@@ -268,6 +188,32 @@ void serialEvent() {
 	//println(inputString);
 
 }
+void SendDs18b20() {
+	//Serial.println("Weszlo send ds");
+	for (int i = 0; i < SensorsCount; i++) {
+		String sensor = CreateDs18b20Json(i);
+		String msg = PrepareMessage(SensorValues, Ds18B20, sensor);
+		Serial.println(msg);
+		delay(200);
+	}
+
+}
+void SendBmp180() {
+	//Serial.println("Weszlo send ds");
+	String sensor = CreateBmp180Json();
+	String msg = PrepareMessage(SensorValues, BMP180, sensor);
+	Serial.println(msg);
+	//delay(1000);
+
+}
+void SendDht() {
+	//Serial.println("Weszlo send dht");
+	String sensor = CreateDhtJson();
+	String msg = PrepareMessage(SensorValues, Dht22, sensor);
+	Serial.println(msg);
+	//delay(1000);
+}
+
 //
 //#pragma region i2cComunication
 //void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtˇw
@@ -552,52 +498,81 @@ void serialEvent() {
 //	return result;
 //}
 //
-t_i2cResponse readTempDht(int pin) {
-	t_i2cResponse result;
+#pragma endregion
 
-	int type = 0;
+#pragma region CreateJson
+String CreateDhtJson() {
+	DynamicJsonBuffer jsonBuffer;
+	JsonObject& root = jsonBuffer.createObject();
 
-	Sprint("Dht type: ");
-	Sprint(type);
-	Sprint("    pin: ");
-	Sprint(pin);
+	root.set("SensorType", (int)Dht22);
+	root.set("Pin", DhtPin);
+	t_i2cResponse dtha = readTempDht(DhtPin);
+	root.set("Temperature", dtha.Temperature, 2);
+	root.set("Humidity", dtha.Humidity, 2);
+	root.set("Date", getDateTime());
+	String msg2;
+	root.printTo(msg2);
 
-	//DHT dht(pin, type);
-	DHT dht;
-	dht.setup(pin);
 
-	delay(dht.getMinimumSamplingPeriod());
-	float h = dht.getHumidity();
-	float t = dht.getTemperature();
-	if (isnan(t) || isnan(h)) {
-		Sprintln("Failed to read from DHT");
-		Sprintln(dht.getStatusString());
-		result.Status = ERROR;
+	return msg2;
+}
+String CreateBmp180Json() {
+	DynamicJsonBuffer jsonBuffer;
+	JsonObject& root = jsonBuffer.createObject();
+
+	//JsonObject& dht = root.createNestedObject("Dht");
+	root.set("SensorType", (int)BMP180);
+
+	t_i2cResponse dtha = readTempDht(DhtPin);
+	root.set("Pressure", bmp.readPressure());
+	root.set("Temperature", bmp.readTemperature());
+
+	root.set("Date", getDateTime());
+	String msg2;
+	root.printTo(msg2);
+
+
+	return msg2;
+}
+String CreateDs18b20Json(int i) {
+	DeviceAddress add;
+	DynamicJsonBuffer jsonBuffer;
+	JsonObject& root = jsonBuffer.createObject();
+
+	
+
+	if (sensors.getAddress(add, i)) {
+		root.set("SensorType", (int)Ds18B20);
+		root.set("Address", getStringAddress(add));
+		root.set("Temperature", temps[i], 2);
+		root.set("Date", getDateTime());
 	}
-	else {
+	String msg2;
+	root.printTo(msg2);
 
-		result.Temperature = t;
-		result.Humidity = h;
-		result.Status = OK;
-	}
-	return result;
+
+	return msg2;
+}
+String PrepareMessage(t_operation operation, SensorEnum sensor, String object) {
+	DynamicJsonBuffer jsonBuffer1;
+	JsonObject& root = jsonBuffer1.createObject();
+
+	root.set("MessageType", (int)operation); // rodzaj wysyłanej wiadomosci
+	root.set("SensorType", (int)sensor);
+	root.set("Sender", IdentityDevice); // identyfikator kto wysyla
+	root.set("Reciver", 0);  // identyfikator do kogowysyłam 0 -RPI
+	root.set("DataBus", 1);
+	root.set("Message", object);  // serializowany obiekt docelowy
+								  //root.prettyPrintTo(Serial);
+								  //char *msg = new char[jsonBuffer1.size()];
+	String msg2;
+	root.printTo(msg2);
+	//	delete &jsonBuffer1;
+	return msg2;
 }
 
-//bool CompareDeviceAddress(DeviceAddress add1, DeviceAddress add2) {
-//	for (int i = 0; i < 8; i++)
-//	{
-//		if (add1[i] != add2[i]) {
-//			return false;
-//		}
-//	}
-//	return true;
-//}
-//
-//
-//
-//#pragma endregion
-//
-//
+#pragma endregion
 
 #pragma region GetData
 String getStringAddress(DeviceAddress deviceAddress)
@@ -606,7 +581,8 @@ String getStringAddress(DeviceAddress deviceAddress)
 	for (uint8_t i = 0; i < 8; i++)
 	{
 		// zero pad the address if necessary
-		if (deviceAddress[i] < 16) Sprint("0");
+		if (deviceAddress[i] < 16) 
+			ret+= "0";
 		ret += (String(deviceAddress[i], HEX));
 	}
 	return ret;
@@ -642,6 +618,37 @@ String getDateTime() {
 
 
 }
+t_i2cResponse readTempDht(int pin) {
+	t_i2cResponse result;
+
+	int type = 0;
+
+	Sprint("Dht type: ");
+	Sprint(type);
+	Sprint("    pin: ");
+	Sprint(pin);
+
+	//DHT dht(pin, type);
+	DHT dht;
+	dht.setup(pin);
+
+	delay(dht.getMinimumSamplingPeriod());
+	float h = dht.getHumidity();
+	float t = dht.getTemperature();
+	if (isnan(t) || isnan(h)) {
+		Sprintln("Failed to read from DHT");
+		Sprintln(dht.getStatusString());
+		result.Status = ERROR;
+	}
+	else {
+
+		result.Temperature = t;
+		result.Humidity = h;
+		result.Status = OK;
+	}
+	return result;
+}
+
 #pragma endregion
 
 #pragma region PrintData

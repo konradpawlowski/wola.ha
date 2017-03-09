@@ -37,7 +37,7 @@ namespace wola.ha.common.Factory
         async Task ManageSensorValues(SerialMessage message)
         {
             ISenssor val = new SensorDs8b20();
-            switch (message.SensorKind)
+            switch (message.SensorType)
             {
                 case SensorTypeEnum.test:
                     break;
@@ -55,6 +55,8 @@ namespace wola.ha.common.Factory
                     await WolaClient.PostItemToController<SensorDht>("SensorDht22", (SensorDht)val);
                     break;
                 case SensorTypeEnum.BMP180:
+                    val = JsonConvert.DeserializeObject<SensorBmp180>(message.Message);
+                    await WolaClient.PostItemToController<SensorBmp180>("SensorBMP180", (SensorBmp180)val);
                     break;
                 case SensorTypeEnum.ACS712:
                     break;

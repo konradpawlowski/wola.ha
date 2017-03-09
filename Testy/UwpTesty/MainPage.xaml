@@ -9,6 +9,11 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Button Content="Button" HorizontalAlignment="Left" Margin="96,86,0,0" VerticalAlignment="Top" Width="171" Click="Button_ClickAsync"/>
+        <Button Content="T2" HorizontalAlignment="Left" Margin="96,211,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click_1"/>
+        <Button Content="T1" HorizontalAlignment="Left" Margin="96,164,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click"/>
+        <Button Content="P2" HorizontalAlignment="Left" Margin="96,306,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click_3"/>
+        <Button Content="P1" HorizontalAlignment="Left" Margin="96,258,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click_2"/>
+        
 
     </Grid>
 </Page>

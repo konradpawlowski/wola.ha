@@ -5,14 +5,15 @@ namespace wola.ha.common.Model.Serial
 {
     public class SensorDs8b20 : ISenssor
     {
-       
+        public DateTime Date { get; set; }
+        public float SensorType { get; set; }
         public string Address { get; set; }
         public float Temperature { get; set; }
-        public DateTime Date { get; set; }
         public override string ToString()
         {
             StringBuilder str = new StringBuilder();
-            str.Append("Sensor type DS18B20");
+            str.Append("Sensor type DS18B20:");
+            str.Append(SensorType);
             str.AppendLine();
             str.Append("Address \t");
             str.Append(Address);

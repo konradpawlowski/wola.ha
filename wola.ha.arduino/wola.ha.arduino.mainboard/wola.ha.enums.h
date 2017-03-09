@@ -1,7 +1,8 @@
 #pragma once
 typedef enum Operation
 {
-	SensorValues = 1
+	SensorValues = 1,
+	Message = 2
 } t_operation;
 
 
@@ -15,6 +16,13 @@ enum SensorEnum
 	OnOff = 6
 
 };
+
+enum MessageType {
+	Info,
+	Warrning,
+	Error
+};
+
 
 enum ValueType {
 	Temperature = 1,
