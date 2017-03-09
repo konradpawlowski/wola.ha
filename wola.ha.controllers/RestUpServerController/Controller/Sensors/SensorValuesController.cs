@@ -130,5 +130,33 @@ namespace RestUpServerController.Controller.Sensors
 
         }
 
+        [UriFormat("/SensorAcs712")]
+        public async Task<IPostResponse> AddSensorAcs7120Value([FromContent] SensorAcs712 data)
+        {
+
+            try
+            {
+                var sensor = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().Where(w => w.SensorType == data.SensorType && w.Address == data.Address).FirstOrDefaultAsync();
+                if (sensor == null) return new PostResponse(PostResponse.ResponseStatus.Conflict, $"AddSensorAcs7120Value/{data}"); ;
+
+                var value = new SensorOnOffValue
+                {
+                    SensorId = sensor.Id,
+                    Value = data.Value,
+                    Date = data.Date
+
+                };
+
+
+                var ret = await Context.Instance.Connection.InsertAsync(value);
+                return new PostResponse(PostResponse.ResponseStatus.Created, $"AddSensorAcs7120Value/{ret}");
+            }
+            catch (Exception ex)
+            {
+                LoggerFactory.LogException(ex);
+                return new PostResponse(PostResponse.ResponseStatus.Conflict, $"SensorTemperatureValues/{data}");
+            }
+
+        }
     }
 }

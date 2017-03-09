@@ -1,4 +1,5 @@
-﻿#include <RTClib.h>
+﻿#include "ACS712.h"
+#include <RTClib.h>
 #include <Adafruit_BMP085.h>
 #include <ArduinoJson.h>
 #include <DHT.h>
@@ -29,6 +30,8 @@ OneWire oneWire(OneWirePin);
 DallasTemperature sensors(&oneWire);
 Adafruit_BMP085 bmp;
 RTC_DS1307 rtc;
+ACS712 wentylator(ACS712_30A, A0);
+ACS712 podajnik(ACS712_30A, A1);
 
 int SensorsCount;
 float temps[10] = { 0,0,0,0,0,0,0,0,0,0 };
@@ -39,14 +42,18 @@ unsigned long iStart = 0;
 unsigned long iTempStop = 0;
 unsigned long iSendStop = 0;
 unsigned long iPressureStop = 0;
+unsigned long iPiecStop = 0;
 #pragma endregion
 String inputString;
+bool bWentylator = false;
+bool bPodajnik = false;
 
 void setup() {
 	SetupSerial();
 	SetupRtc();
 	SetupDs182b();
 	SetupBmp180();
+	SetupAcs712();
 }
 
 
@@ -55,12 +62,16 @@ void setup() {
 void loop() {
 
 	ReadTempFromDs(30000);
-	SendData(60000);
+	SendDataFromSensors(60000);
+
+	
+
 
 	if (ReciveMessage) {
 		Sprintln(inputString);
 		ReciveMessage = false;
 	}
+	CheckPiec(1000);
 }
 
 
@@ -111,7 +122,10 @@ void SetupBmp180() {
 		//while (1) {}
 	}
 }
-
+void SetupAcs712() {
+	wentylator.calibrate();
+	podajnik.calibrate();
+}
 #pragma endregion
 
 #pragma region Loop
@@ -146,7 +160,7 @@ void ReadTempFromDs(unsigned long interval) {
 		iTempStop = millis();
 	}
 }
-void SendData(unsigned long interval) {
+void SendDataFromSensors(unsigned long interval) {
 	Sprintln("weszlo do send");
 	Sprint(millis() - iSendStop);
 	Sprint(">=");
@@ -166,7 +180,37 @@ void SendData(unsigned long interval) {
 
 	}
 }
+void CheckPiec(unsigned long interval) {
+	float iw = 0;
+	float ip = 0;
+	float wartoscProgowa = 2.31;
+	bool lWentylator;
+	bool lPodajnik;
+	int ile = 20;
+	if (millis() - iPiecStop >= interval)
+	{
+		for (int i = 0; i < ile; i++)
+		{
+			iw += wentylator.getCurrentAC();
+			ip += podajnik.getCurrentAC();
+		}
+	//	Serial.print(iw / ile);
+	//	Serial.print("\t");
+	//	Serial.println(ip / ile);
+		lWentylator = iw/ile > 0.32;
+		lPodajnik = ip/ile > 0.5;
 
+		if (lWentylator != bWentylator) {
+			SendAcs712Value(lWentylator,"A0");
+			bWentylator = lWentylator;
+		}
+		if (lPodajnik != bPodajnik) {
+			SendAcs712Value(lPodajnik,"A1");
+			bPodajnik = lPodajnik;
+		}
+		iPiecStop = millis();
+	}
+}
 #pragma endregion
 
 #pragma region serial communication
@@ -213,7 +257,16 @@ void SendDht() {
 	Serial.println(msg);
 	//delay(1000);
 }
-
+void SendOnOffValue(int id, bool value) {
+	String sensor = CreateOnOffJson(id,value);
+	String msg = PrepareMessage(SensorValues, OnOff, sensor);
+	Serial.println(msg);
+}
+void SendAcs712Value(bool value, String pin) {
+	String sensor = CreateAcs712Json(value, pin);
+	String msg = PrepareMessage(SensorValues, Acs712, sensor);
+	Serial.println(msg);
+}
 //
 //#pragma region i2cComunication
 //void receiveEvent(int howMany) {  //Odebranie I2C, howMany - ile bajtˇw
@@ -525,8 +578,23 @@ String CreateBmp180Json() {
 	root.set("SensorType", (int)BMP180);
 
 	t_i2cResponse dtha = readTempDht(DhtPin);
-	root.set("Pressure", bmp.readPressure());
+	root.set("Pressure", (float)bmp.readPressure()/100);
 	root.set("Temperature", bmp.readTemperature());
+
+	root.set("Date", getDateTime());
+	String msg2;
+	root.printTo(msg2);
+
+
+	return msg2;
+}
+String CreateAcs712Json(bool value, String pin ) {
+	DynamicJsonBuffer jsonBuffer;
+	JsonObject& root = jsonBuffer.createObject();
+
+	root.set("SensorType", (int)Acs712);
+	root.set("Address", pin);
+	root.set("Value",value);
 
 	root.set("Date", getDateTime());
 	String msg2;
@@ -571,6 +639,15 @@ String PrepareMessage(t_operation operation, SensorEnum sensor, String object) {
 	//	delete &jsonBuffer1;
 	return msg2;
 }
+String CreateOnOffJson(int id, bool value) {
+	DeviceAddress add;
+	DynamicJsonBuffer jsonBuffer;
+	JsonObject& root = jsonBuffer.createObject();
+	root.set("Id", id);
+	root.set("Value", value);
+	root.set("Date", getDateTime());
+}
+
 
 #pragma endregion
 
@@ -648,6 +725,8 @@ t_i2cResponse readTempDht(int pin) {
 	}
 	return result;
 }
+
+
 
 #pragma endregion
 

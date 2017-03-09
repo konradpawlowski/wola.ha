@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wola.ha.common.DataModel;
 using wola.ha.common.Enums;
 using wola.ha.common.Helper;
 using wola.ha.common.Model.Serial;
@@ -59,8 +60,13 @@ namespace wola.ha.common.Factory
                     await WolaClient.PostItemToController<SensorBmp180>("SensorBMP180", (SensorBmp180)val);
                     break;
                 case SensorTypeEnum.ACS712:
+                    
+                     val = JsonConvert.DeserializeObject<SensorAcs712>(message.Message);
+                    await WolaClient.PostItemToController<SensorAcs712>("SensorAcs712", (SensorAcs712)val);
+
                     break;
                 case SensorTypeEnum.OnOff:
+                 
                     break;
                 default:
                     break;

@@ -19,6 +19,6 @@ namespace wola.ha.common.DataModel
         public int SensorId { get; set; }
 
         [Default(true, 0)]
-        public decimal Value { get; set; }
+        public bool Value { get; set; }
     }
 }

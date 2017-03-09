@@ -127,6 +127,7 @@
     <Compile Include="Devices\Communication\I2c\I2CResponseStatus.cs" />
     <Compile Include="Factory\SerialMessageFactory.cs" />
     <Compile Include="Model\Serial\ISenssor.cs" />
+    <Compile Include="Model\Serial\SensorAcs712.cs" />
     <Compile Include="Model\Serial\SensorBMP180.cs" />
     <Compile Include="Model\Serial\SensorDht.cs" />
     <Compile Include="Model\Serial\SensorDs8b20.cs" />

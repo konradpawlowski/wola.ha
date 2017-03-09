@@ -43,6 +43,7 @@ namespace RestUpServerController
                 restRouteHandler.RegisterController<SensorPressureValueController>();
                 restRouteHandler.RegisterController<SensorsController>();
                 restRouteHandler.RegisterController<SensorValuesController>();
+                restRouteHandler.RegisterController<SensorOnOffValueController>();
                 
 
 

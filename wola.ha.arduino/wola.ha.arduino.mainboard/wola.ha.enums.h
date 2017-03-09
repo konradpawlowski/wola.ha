@@ -12,7 +12,7 @@ enum SensorEnum
 	Dht11 = 2,
 	Dht22 = 3,
 	BMP180 = 4,
-	ACS712 = 5,
+	Acs712 = 5,
 	OnOff = 6
 
 };

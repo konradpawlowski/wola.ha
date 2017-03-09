@@ -102,6 +102,7 @@
     <Compile Include="Controller\Sensors\SensorValuesController.cs" />
     <Compile Include="Controller\SensorTemperatureValueControler.cs" />
     <Compile Include="Model\SensorValueDataContent.cs" />
+    <Compile Include="SensorOnOffValueController.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
