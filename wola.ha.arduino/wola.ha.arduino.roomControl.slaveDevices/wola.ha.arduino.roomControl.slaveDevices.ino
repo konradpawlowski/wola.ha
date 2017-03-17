@@ -282,6 +282,9 @@ void SendTemp(TSensorValue val) {
 	client.print(String("GET ") + address + " HTTP/1.1\r\n" +
 		"Host: " + host + "\r\n" +
 		"Connection: close\r\n\r\n");
+
+	
+
 	unsigned long timeout = millis();
 	while (client.available() == 0) {
 		if (millis() - timeout > 5000) {

@@ -1,4 +1,5 @@
-﻿#include "ACS712.h"
+﻿#include <DallasTemperature.h>
+#include "ACS712.h"
 #include <RTClib.h>
 #include <Adafruit_BMP085.h>
 #include <ArduinoJson.h>
@@ -10,6 +11,7 @@
 #include "FastCRC.h"
 #include "wola.ha.struct.h"
 #include <math.h>
+
 
 
 //#define Sprintln(a) (Serial.println(a))
@@ -123,8 +125,13 @@ void SetupBmp180() {
 	}
 }
 void SetupAcs712() {
-	wentylator.calibrate();
-	podajnik.calibrate();
+	/*Serial.print("Kalibracja wentylator:  ");
+	Serial.println(wentylator.calibrate());
+
+	Serial.print("Kalibracja podajnik:  ");
+	Serial.println(podajnik.calibrate());*/
+	wentylator.setZeroPoint(511);
+	podajnik.setZeroPoint(511);
 }
 #pragma endregion
 
@@ -169,9 +176,9 @@ void SendDataFromSensors(unsigned long interval) {
 	{
 		Sprintln("Wysylam");
 		SendDs18b20();
-		delay(200);
+	//	delay(200);
 		SendDht();
-		delay(200);
+		//delay(200);
 
 		SendBmp180();
 
@@ -186,7 +193,7 @@ void CheckPiec(unsigned long interval) {
 	float wartoscProgowa = 2.31;
 	bool lWentylator;
 	bool lPodajnik;
-	int ile = 20;
+	int ile = 100;
 	if (millis() - iPiecStop >= interval)
 	{
 		for (int i = 0; i < ile; i++)
@@ -197,7 +204,7 @@ void CheckPiec(unsigned long interval) {
 	//	Serial.print(iw / ile);
 	//	Serial.print("\t");
 	//	Serial.println(ip / ile);
-		lWentylator = iw/ile > 0.32;
+		lWentylator = iw/ile > 0.11;
 		lPodajnik = ip/ile > 0.5;
 
 		if (lWentylator != bWentylator) {
@@ -238,7 +245,7 @@ void SendDs18b20() {
 		String sensor = CreateDs18b20Json(i);
 		String msg = PrepareMessage(SensorValues, Ds18B20, sensor);
 		Serial.println(msg);
-		delay(200);
+		delay(500);
 	}
 
 }
@@ -247,7 +254,7 @@ void SendBmp180() {
 	String sensor = CreateBmp180Json();
 	String msg = PrepareMessage(SensorValues, BMP180, sensor);
 	Serial.println(msg);
-	//delay(1000);
+	delay(500);
 
 }
 void SendDht() {
@@ -255,7 +262,7 @@ void SendDht() {
 	String sensor = CreateDhtJson();
 	String msg = PrepareMessage(SensorValues, Dht22, sensor);
 	Serial.println(msg);
-	//delay(1000);
+	delay(500);
 }
 void SendOnOffValue(int id, bool value) {
 	String sensor = CreateOnOffJson(id,value);

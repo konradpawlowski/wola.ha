@@ -132,6 +132,12 @@
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\wola.ha.common\wola.ha.common\wola.ha.common.csproj">
+      <Project>{048e15d6-7241-4f51-92ef-058c6df18bb3}</Project>
+      <Name>wola.ha.common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

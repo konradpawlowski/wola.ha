@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using wola.ha.common.DataModel;
 using wola.ha.common.Helper;
 using wola.ha.common.Model;
@@ -17,30 +18,30 @@ namespace RestUpServerController.Controller.Sensors
     class SensorValuesController
     {
         [UriFormat("/SensorDs18b20")]
-        public async Task<IPostResponse> AddSensorDs18b20Value([FromContent] SensorDs8b20 data)
+        public async Task<IPostResponse> AddSensorDs18b20ValueAsync([FromContent] SensorDs8b20 data)
         {
 
             try
             {
-                var sensor = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().Where(w => w.Address == data.Address.ToUpper()).FirstOrDefaultAsync();
-                if (sensor == null) return new PostResponse(PostResponse.ResponseStatus.Conflict, $"AddSensorDs18b20Value/{data}"); ;
+                var sensor = await Context.Instance.Connection.Table<wola.ha.common.DataModel.Sensors>().Where(w => w.SensorType == data.SensorType && w.Address.ToUpper() == data.Address.ToUpper()).FirstOrDefaultAsync();
+                if (sensor == null) return new PostResponse(PostResponse.ResponseStatus.Conflict, $"AddSensorDs18b20Value/{data}");
 
                 var value = new SensorTemperatureValues
                 {
                     SensorId = sensor.Id,
-                    Value = (decimal)data.Temperature,
-                    Date = data.Date
+                    Value = (double)data.Temperature,
+                    Date = DateTime.Now
 
                 };
 
 
-                var ret = await Context.Instance.Connection.InsertAsync(value);
+                var ret = Context.Instance.Connection.InsertAsync(value);
                 return new PostResponse(PostResponse.ResponseStatus.Created, $"AddSensorDs18b20Value/{ret}");
             }
             catch (Exception ex)
             {
                 LoggerFactory.LogException(ex);
-                return new PostResponse(PostResponse.ResponseStatus.Conflict, $"SensorTemperatureValues/{data}");
+                return new PostResponse(PostResponse.ResponseStatus.Conflict, $"AddSensorDs18b20Value/{data}");
             }
 
         }
@@ -62,8 +63,8 @@ namespace RestUpServerController.Controller.Sensors
                             var temp = new SensorTemperatureValues
                             {
                                 SensorId = item.Id,
-                                Value = (decimal)data.Temperature,
-                                Date = data.Date
+                                Value = (double)data.Temperature,
+                                Date = DateTime.Now
 
                             };
                             ret[0] = await Context.Instance.Connection.InsertOrReplaceAsync(temp);
@@ -75,7 +76,7 @@ namespace RestUpServerController.Controller.Sensors
                             {
                                 SensorId = item.Id,
                                 Value = (decimal)data.Humidity,
-                                Date = data.Date
+                                Date = DateTime.Now
 
                             };
                             ret[1] = await Context.Instance.Connection.InsertOrReplaceAsync(humi);
@@ -114,7 +115,7 @@ namespace RestUpServerController.Controller.Sensors
                 {
                     SensorId = sensor.Id,
                     Value = (decimal)data.Pressure,
-                    Date = data.Date
+                    Date = DateTime.Now
 
                 };
 
@@ -143,7 +144,7 @@ namespace RestUpServerController.Controller.Sensors
                 {
                     SensorId = sensor.Id,
                     Value = data.Value,
-                    Date = data.Date
+                    Date = DateTime.Now
 
                 };
 

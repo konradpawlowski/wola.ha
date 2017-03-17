@@ -5,6 +5,8 @@
     xmlns:local="using:UwpTesty"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
+
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -13,7 +15,13 @@
         <Button Content="T1" HorizontalAlignment="Left" Margin="96,164,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click"/>
         <Button Content="P2" HorizontalAlignment="Left" Margin="96,306,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click_3"/>
         <Button Content="P1" HorizontalAlignment="Left" Margin="96,258,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.584,-1.391" Click="Button_Click_2"/>
-        
+        <Charting:Chart  
+            x:Name="lineChart"  
+            HorizontalAlignment="Center"  
+            VerticalAlignment="Bottom"  
+            Margin="0" Height="800" Width="1024" >
+         
+        </Charting:Chart>
 
     </Grid>
 </Page>

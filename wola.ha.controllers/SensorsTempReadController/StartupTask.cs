@@ -183,26 +183,28 @@ namespace SensorsTempReadController
                     
                     string input = "";
                     input = dataReaderObject.ReadString(bytesRead);// + Environment.NewLine;
-                    var aaa = input.Split('\n');
-                    foreach (string item in aaa)
-                    {
-                        try
-                        {
-                            if (item.Length == 0) continue;
-                            SerialMessage msg = JsonConvert.DeserializeObject<SerialMessage>(item);
+                    Debug.WriteLine(input);
+                    ProcessMessage(input.Split('\n').ToList());
+                    //var aaa = input.Split('\n').ToList();
+                    //foreach (string item in aaa)
+                    //{
+                    //    try
+                    //    {
+                    //        if (item.Length == 0) continue;
+                    //        SerialMessage msg = JsonConvert.DeserializeObject<SerialMessage>(item);
 
-                            if (msg.Reciver != 0) return; //komunikat nie jest dla mnie
+                    //        if (msg.Reciver != 0) return; //komunikat nie jest dla mnie
 
-                            SerialMessageFactory smf = new SerialMessageFactory();
-                            await smf.ManageMessage(msg);
-                        }
-                        catch (Exception ex)
-                        {
+                    //        SerialMessageFactory smf = new SerialMessageFactory();
+                    //        await smf.ManageMessage(msg);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
 
-                            Debug.WriteLine(ex.Message);
-                        }
+                    //        Debug.WriteLine(ex.Message);
+                    //    }
                        
-                    }
+                    //}
                                       
                 }
                 catch (Exception  ex)
@@ -212,6 +214,33 @@ namespace SensorsTempReadController
                 }
             }
         }
+
+
+        private async Task ProcessMessage(List<string> messages)
+        {
+            Debug.WriteLine("Messages: " + messages.Count.ToString());
+            foreach (string item in messages)
+            {
+                try
+                {
+                    if (item.Length == 0) continue;
+                    SerialMessage msg = JsonConvert.DeserializeObject<SerialMessage>(item);
+
+                    if (msg.Reciver != 0) return; //komunikat nie jest dla mnie
+
+                    SerialMessageFactory smf = new SerialMessageFactory();
+                    await smf.ManageMessage(msg);
+                }
+                catch (Exception ex)
+                {
+
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+        }
+
+
 
         /// <summary>
         /// CancelReadTask:

@@ -180,5 +180,21 @@ namespace wola.ha.common.Helper
             }
 
         }
+
+        public static async Task<List<T>> GetFilteredListFromControllerAction<T>(string controllerName, int id, ClaimsPrincipal user)
+        {
+            try
+            {
+                var client = new BaseApiClient(controllerName + "/" + id.ToString(), user);
+                var retList = await client.GetList<List<T>>();
+
+                return retList;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }

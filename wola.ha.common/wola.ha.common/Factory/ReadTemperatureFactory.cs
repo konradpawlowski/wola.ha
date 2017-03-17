@@ -52,7 +52,7 @@ namespace wola.ha.common.Factory
                 ArduinoI2CResponse response = await GetTemperatureFromArduino(Convert.ToInt32(sensor.DataBusEx.Address, 16), message);
                 if (response.Status == (short)I2CResponseStatus.Ok)
                 {
-                    val.Value = (decimal)response.Temperature;
+                    val.Value = (double)response.Temperature;
                     val.Date = DateTime.Now;
                     val.SensorId = sensor.Id;
                 }

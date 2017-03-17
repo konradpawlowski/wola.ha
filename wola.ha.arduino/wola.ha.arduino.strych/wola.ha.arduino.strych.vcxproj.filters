@@ -15,31 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="wola_ha_arduuino_core.ino" />
-    <None Include="src\_micro-api\libraries\wola_ha_arduuino_coreLib\library.properties" />
+    <None Include="wola.ha.arduino.strych.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\_micro-api\libraries\wola_ha_arduuino_coreLib\src\wola_ha_arduuino_coreLib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FastCRChw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FastCRCsw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\_micro-api\libraries\wola_ha_arduuino_coreLib\src\wola_ha_arduuino_coreLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FastCRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FastCRC_cpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FastCRC_tables.h">
+    <ClInclude Include="__vm\.wola.ha.arduino.strych.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
