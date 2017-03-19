@@ -23,14 +23,16 @@
 #include <DallasTemperature.h>
 #include <ArduinoJson.h>
 #include <OneWire.h>
-#include <RTClib.h>
+#include <RTClib.h>n 
 
 #include <Wire.h>
 
 #pragma region definitions
 #define OneWirePin 2
 #define TEMPERATURE_PRECISION 10
-
+#define BLUE 13
+#define GREEN 12
+#define RED 14
 
 OneWire oneWire(OneWirePin);
 DallasTemperature sensors(&oneWire);
@@ -61,19 +63,33 @@ String ipAddress;
 
 void setup() {
 	SetupSerial();
-
+	SetupLed();
 	SetupDs182b();
-//	SetupRtc();
+	//	SetupRtc();
 	SetupWifi();
 
 }
 void loop() {
+	//sygnalizacja wifi
+	if (WiFi.status() == WL_CONNECTED)
+		digitalWrite(GREEN, HIGH);
+	else
+		digitalWrite(GREEN, LOW);
+
 	ReadTempFromDs(10000);
 	SendDs18b20(60000);
 
 }
 
-#pragma Setup
+#pragma Setup 
+void SetupLed() {
+	pinMode(BLUE, OUTPUT);
+	pinMode(GREEN, OUTPUT);
+	pinMode(RED, OUTPUT);
+	digitalWrite(BLUE, LOW);
+	digitalWrite(RED, LOW);
+	digitalWrite(GREEN, LOW);
+}
 //void SetupRtc() {
 //	if (!rtc.begin()) {
 //		Serial.println("Couldn't find RTC");
@@ -93,23 +109,24 @@ void loop() {
 //}
 void SetupDs182b() {
 	sensors.begin();						  // locate devices on the bus
-	
+
 	Sprint("Locating devices pin 2 ...");
 	SensorsCount = sensors.getDeviceCount();
 	Sprint("Found ");
 	Sprint(SensorsCount);
 	Sprintln(" devices.");
-	//SensorsCount = sensors.getDeviceCount();
+	SensorsCount = sensors.getDeviceCount();
 	int i = 0;
-	while (SensorsCount < 5 || i == 10)
-	{
-		//ESP.restart();
-		SensorsCount = sensors.getDeviceCount();
-		Sprint("Found ");
-		Sprint(SensorsCount);
-		Sprintln(" devices.");
-		i++;
-	}
+	//while (SensorsCount < 5 || i == 10)
+	//{
+	//	//ESP.restart();
+	//	SensorsCount = sensors.getDeviceCount();
+	//	Sprint("Found ");
+	//	Sprint(SensorsCount);
+	//	Sprintln(" devices.");
+	//	i++;
+	//}
+	Blink(RED, SensorsCount);
 	//ustawienia rozdzielczosci
 	for (uint8_t i = 0; i < SensorsCount; i++)
 	{
@@ -121,16 +138,16 @@ void SetupDs182b() {
 
 }
 void SetupWifi() {
-//	WiFiManager wifiManager;
-//	//WiFiManager
-//	//Local intialization. Once its business is done, there is no need to keep it around
-//	//use this for auto generated name ESP + ChipID
-//	wifiManager.autoConnect();
-//	//if you get here you have connected to the WiFi
-//	Serial.println("connected...yeey :)");
-//	ipAddress = WiFi.localIP().toString();
+	//	WiFiManager wifiManager;
+	//	//WiFiManager
+	//	//Local intialization. Once its business is done, there is no need to keep it around
+	//	//use this for auto generated name ESP + ChipID
+	//	wifiManager.autoConnect();
+	//	//if you get here you have connected to the WiFi
+	//	Serial.println("connected...yeey :)");
+	//	ipAddress = WiFi.localIP().toString();
 
-	const char* ssid = "kondziu3";
+	const char* ssid = "kondziu";
 	const char* password = "hitman85";
 	Serial.println();
 	Serial.println();
@@ -142,6 +159,7 @@ void SetupWifi() {
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
 		Serial.print(".");
+		Blink(GREEN, 1);
 	}
 
 	Serial.println("");
@@ -179,9 +197,10 @@ void ReadTempFromDs(unsigned long interval) {
 			}
 			printData(sensors, add);
 			float temp = sensors.getTempC(add);
-			if(temp != -127 && temp != 85)
+			if (temp != -127 && temp != 85)
 				temps[i] = temp;
 			//	}
+			Blink(RED, 1);
 			delay(500);
 		}
 		iTempStop = millis();
@@ -193,7 +212,7 @@ void ReadTempFromDs(unsigned long interval) {
 bool SendMessage(String postData) {
 
 	if (WiFi.status() == WL_CONNECTED) {   //Check WiFi connection status
-
+		Blink(BLUE, 1);
 		HTTPClient http;    //Declare object of class HTTPClient
 
 		http.begin("http://192.168.200.10:8800/api/SensorDs18b20");      //Specify request destination
@@ -208,9 +227,17 @@ bool SendMessage(String postData) {
 
 		http.end();  //Close connection
 		if (httpCode >= 200 && httpCode <= 300)
+		{
+			Blink(BLUE, 1);
 			return true;
+		}
 		else
+		{
+
+			Blink(BLUE, 2);
 			return false;
+		}
+
 	}
 	else {
 
@@ -281,7 +308,7 @@ void SendDs18b20(unsigned long interval) {
 			Serial.println(sensor);
 			if (SendMessage(sensor)) {
 				Serial.println("Wys³ano");
-				
+
 			}
 			delay(500);
 		}
@@ -292,60 +319,70 @@ void SendDs18b20(unsigned long interval) {
 
 
 
-	String getStringAddress(DeviceAddress deviceAddress)
+String getStringAddress(DeviceAddress deviceAddress)
+{
+	String ret;
+	for (uint8_t i = 0; i < 8; i++)
 	{
-		String ret;
-		for (uint8_t i = 0; i < 8; i++)
-		{
-			// zero pad the address if necessary
-			if (deviceAddress[i] < 16)
-				ret += "0";
-			ret += (String(deviceAddress[i], HEX));
-		}
-		return ret;
+		// zero pad the address if necessary
+		if (deviceAddress[i] < 16)
+			ret += "0";
+		ret += (String(deviceAddress[i], HEX));
 	}
+	return ret;
+}
 #pragma region PrintData
-	// function to print a device address
-	void printAddress(DeviceAddress deviceAddress)
+// function to print a device address
+void printAddress(DeviceAddress deviceAddress)
+{
+	for (uint8_t i = 0; i < 8; i++)
 	{
-		for (uint8_t i = 0; i < 8; i++)
-		{
-			// zero pad the address if necessary
-			if (deviceAddress[i] < 16) Sprint("0");
-			Sprint(String(deviceAddress[i], HEX));
-		}
+		// zero pad the address if necessary
+		if (deviceAddress[i] < 16) Sprint("0");
+		Sprint(String(deviceAddress[i], HEX));
 	}
+}
 
-	// function to print the temperature for a device
-	void printTemperature(DallasTemperature sens, DeviceAddress deviceAddress)
-	{
-		float tempC = sens.getTempC(deviceAddress);
-		Sprint("Temp C: ");
-		Sprint(tempC);
-		Sprint(" Temp F: ");
-		Sprint(DallasTemperature::toFahrenheit(tempC));
-	}
+// function to print the temperature for a device
+void printTemperature(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	float tempC = sens.getTempC(deviceAddress);
+	Sprint("Temp C: ");
+	Sprint(tempC);
+	Sprint(" Temp F: ");
+	Sprint(DallasTemperature::toFahrenheit(tempC));
+}
 
-	// function to print a device's resolution
-	void printResolution(DallasTemperature sens, DeviceAddress deviceAddress)
-	{
-		Sprint("Resolution: ");
-		Sprint(sens.getResolution(deviceAddress));
-		Sprintln();
-	}
+// function to print a device's resolution
+void printResolution(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	Sprint("Resolution: ");
+	Sprint(sens.getResolution(deviceAddress));
+	Sprintln();
+}
 
-	// main function to print information about a device
-	void printData(DallasTemperature sens, DeviceAddress deviceAddress)
-	{
-		Sprint("Device Address: ");
-		printAddress(deviceAddress);
-		Sprint(" ");
-		printTemperature(sens, deviceAddress);
-		Sprintln();
-	}
+// main function to print information about a device
+void printData(DallasTemperature sens, DeviceAddress deviceAddress)
+{
+	Sprint("Device Address: ");
+	printAddress(deviceAddress);
+	Sprint(" ");
+	printTemperature(sens, deviceAddress);
+	Sprintln();
+}
 
 
 
 #pragma endregion
+void Blink(uint8_t pin, int count) {
+	for (int i = 0; i < count; i++)
+	{
+		digitalWrite(pin, HIGH);
+		delay(200);
+		digitalWrite(pin, LOW);
+		delay(200);
+	}
+
+}
 
 
