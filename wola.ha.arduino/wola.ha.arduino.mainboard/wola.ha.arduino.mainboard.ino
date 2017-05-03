@@ -45,6 +45,7 @@ unsigned long iTempStop = 0;
 unsigned long iSendStop = 0;
 unsigned long iPressureStop = 0;
 unsigned long iPiecStop = 0;
+unsigned long iSendKotlowniaStop = 0;
 #pragma endregion
 String inputString;
 bool bWentylator = false;
@@ -52,7 +53,7 @@ bool bPodajnik = false;
 
 void setup() {
 	SetupSerial();
-	SetupRtc();
+	//SetupRtc();
 	SetupDs182b();
 	SetupBmp180();
 	SetupAcs712();
@@ -63,9 +64,9 @@ void setup() {
 
 void loop() {
 
-	ReadTempFromDs(30000);
-	SendDataFromSensors(60000);
-
+	ReadTempFromDs(30000); //odczyt temperatury co 30 sec
+	SendDataFromSensors(300000); // zapis temperatury  co 5 min
+	SendTemperatureFromKotlownia(60000); //zapis temperatury z pieca co 1 minute
 	
 
 
@@ -167,6 +168,26 @@ void ReadTempFromDs(unsigned long interval) {
 		iTempStop = millis();
 	}
 }
+void SendTemperatureFromKotlownia(unsigned long interval) {
+	Sprintln("weszlo do send");
+	Sprint(millis() - iSendKotlowniaStop);
+	Sprint(">=");
+	Sprint(interval);
+	if (millis() - iSendKotlowniaStop >= interval)
+	{
+		Sprintln("Wysylam");
+		SendDs18b20();
+	//	delay(200);
+	//	SendDht();
+		//delay(200);
+
+	//	SendBmp180();
+
+		
+		iSendKotlowniaStop = millis();
+
+	}
+}
 void SendDataFromSensors(unsigned long interval) {
 	Sprintln("weszlo do send");
 	Sprint(millis() - iSendStop);
@@ -175,14 +196,14 @@ void SendDataFromSensors(unsigned long interval) {
 	if (millis() - iSendStop >= interval)
 	{
 		Sprintln("Wysylam");
-		SendDs18b20();
-	//	delay(200);
+	//	SendDs18b20();
+		//	delay(200);
 		SendDht();
 		//delay(200);
 
 		SendBmp180();
 
-		
+
 		iSendStop = millis();
 
 	}
@@ -570,7 +591,7 @@ String CreateDhtJson() {
 	t_i2cResponse dtha = readTempDht(DhtPin);
 	root.set("Temperature", dtha.Temperature, 2);
 	root.set("Humidity", dtha.Humidity, 2);
-	root.set("Date", getDateTime());
+//	root.set("Date", getDateTime());
 	String msg2;
 	root.printTo(msg2);
 
@@ -588,7 +609,7 @@ String CreateBmp180Json() {
 	root.set("Pressure", (float)bmp.readPressure()/100);
 	root.set("Temperature", bmp.readTemperature());
 
-	root.set("Date", getDateTime());
+//	root.set("Date", getDateTime());
 	String msg2;
 	root.printTo(msg2);
 
@@ -603,7 +624,7 @@ String CreateAcs712Json(bool value, String pin ) {
 	root.set("Address", pin);
 	root.set("Value",value);
 
-	root.set("Date", getDateTime());
+//	root.set("Date", getDateTime());
 	String msg2;
 	root.printTo(msg2);
 
@@ -621,7 +642,7 @@ String CreateDs18b20Json(int i) {
 		root.set("SensorType", (int)Ds18B20);
 		root.set("Address", getStringAddress(add));
 		root.set("Temperature", temps[i], 2);
-		root.set("Date", getDateTime());
+//		root.set("Date", getDateTime());
 	}
 	String msg2;
 	root.printTo(msg2);
@@ -652,7 +673,7 @@ String CreateOnOffJson(int id, bool value) {
 	JsonObject& root = jsonBuffer.createObject();
 	root.set("Id", id);
 	root.set("Value", value);
-	root.set("Date", getDateTime());
+//	root.set("Date", getDateTime());
 }
 
 

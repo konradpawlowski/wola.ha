@@ -2,7 +2,7 @@
   "dependencies": {
     "IoT.Ds1307": "1.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.1",
-    "Newtonsoft.Json": "10.0.1-beta1",
+    "Newtonsoft.Json": "10.0.1",
     "Serilog": "2.4.1-dev-00801",
     "Serilog.Sinks.ColoredConsole": "2.1.0-dev-00713",
     "Serilog.Sinks.File": "3.2.0",

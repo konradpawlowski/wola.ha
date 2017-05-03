@@ -82,6 +82,7 @@ void setup() {
 	}
 	else {
 		WiFiManager wifiManager;
+		wifiManager.setSTAStaticIPConfig(IPAddress(192, 168, 1, 10), IPAddress(192, 168, 0, 1), IPAddress(255, 255, 255, 0));
 		//WiFiManager
 		//Local intialization. Once its business is done, there is no need to keep it around
 		//use this for auto generated name ESP + ChipID

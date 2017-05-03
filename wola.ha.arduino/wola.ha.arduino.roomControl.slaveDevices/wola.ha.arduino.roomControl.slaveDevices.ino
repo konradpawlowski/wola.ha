@@ -59,6 +59,7 @@ void setup() {
 	// put your setup code here, to run once:
 	Serial.begin(115200);
 	EEPROM.begin(512);
+	ClearEeprom();
 	settings = ReadSettings();
 
 
@@ -79,6 +80,7 @@ void setup() {
 		//WiFiManager
 		//Local intialization. Once its business is done, there is no need to keep it around
 		//use this for auto generated name ESP + ChipID
+		wifiManager.setSTAStaticIPConfig(IPAddress(192, 168, 1, 13), IPAddress(192, 168, 0, 1), IPAddress(255, 255, 255, 0));
 		wifiManager.autoConnect();
 		//if you get here you have connected to the WiFi
 		Serial.println("connected...yeey :)");

@@ -32,6 +32,12 @@
     </Application>
   </Applications>
   <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
+    <uap3:Capability Name="userNotificationListener" />
+    <uap:Capability Name="userAccountInformation" />
+    <uap3:Capability Name="remoteSystem" />
     <DeviceCapability Name="serialcommunication">
       <Device Id="any">
         <Function Type="name:serialPort" />
